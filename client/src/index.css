@@ -1,0 +1,303 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+:root {
+  --primary: #bc4123;
+  --secondary: #2b3452;
+}
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: "Poppins";
+  background: var(--secondary);
+}
+* {
+  color: #fff;
+  margin: 0;
+}
+p {
+  margin: 20px 0;
+}
+button {
+  border: 0;
+  padding: 8px;
+  border-radius: 4px;
+  color: white;
+  background: var(--primary);
+  cursor: pointer;
+}
+
+/* navbar */
+
+header nav {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+header nav h1 {
+  margin-right: auto;
+  border-bottom: 3px solid var(--primary);
+}
+header nav a{
+  text-decoration: none;
+  padding: 6px;
+  border-radius: 4px;
+}
+header nav a.active {
+  background: var(--primary);
+}
+
+/* page content */
+main {
+  max-width: 1200px;
+  margin: 40px auto;
+}
+
+/* help layout */
+.help-layout nav {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 30px 0;
+}
+.help-layout nav a{
+  padding: 10px;
+  border: 2px solid white;
+  border-radius: 4px;
+  text-decoration: none;
+}
+.help-layout nav a:hover{
+  border-color: var(--primary);
+}
+.help-layout nav a.active {
+  background: var(--primary);
+}
+
+/* announcements layout */
+.announcements-layout nav {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 30px 0;
+}
+.announcements-layout nav a{
+  padding: 10px;
+  border: 2px solid white;
+  border-radius: 4px;
+  text-decoration: none;
+}
+.announcements-layout nav a:hover{
+  border-color: var(--primary);
+}
+.announcements-layout nav a.active {
+  background: var(--primary);
+}
+
+/* faq */
+.faq .question {
+  background: rgba(0,0,0,0.2);
+  padding: 5px 20px;
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+/* contact form */
+form {
+  margin-top: 30px;
+}
+form input, form label span, form textarea {
+  display: block;
+}
+form input, form textarea {
+  margin-bottom: 30px;
+  padding: 8px;
+  border-radius: 4px;
+  border: 0;
+  width: 300px;
+  color: var(--secondary);
+}
+form label span {
+  margin-bottom: 10px;
+}
+
+/* help layout */
+.careers-layout nav {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 30px 0;
+}
+.careers-layout nav a{
+  padding: 10px;
+  border: 2px solid white;
+  border-radius: 4px;
+  text-decoration: none;
+}
+.careers-layoutnav a:hover{
+  border-color: var(--primary);
+}
+.careers-layout nav a.active {
+  background: var(--primary);
+}
+
+
+/* careers list */
+.careers > a {
+  display: block;
+  background: rgba(0,0,0,0.2);
+  padding: 20px;
+  border-radius: 4px;
+  margin: 20px 0;
+  text-decoration: none;
+}
+.careers > a:hover p {
+  color: var(--primary);
+}
+.careers p {
+  margin: 0;
+}
+.careers > a p:last-child {
+ font-size: 0.8em;
+ color: #bbb;
+}
+
+/* careers details */
+.career-details {
+  background: rgba(0,0,0,0.2);
+  padding: 20px;
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+
+/* products list */
+.products > a {
+  display: block;
+  background: rgba(0,0,0,0.2);
+  padding: 20px;
+  border-radius: 4px;
+  margin: 20px 0;
+  text-decoration: none;
+}
+.products > a:hover p {
+  color: var(--primary);
+}
+.products p {
+  margin: 0;
+}
+.products > a p:last-child {
+ font-size: 0.8em;
+ color: #bbb;
+}
+
+.product_avatar{
+  height:20px;
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+/* product details */
+.product-details {
+  background: rgba(0,0,0,0.2);
+  padding: 20px;
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+.product-details h2{
+  text-transform: uppercase;
+}
+
+.product-details_image{
+  display: flex;
+  align-content: center;
+  width: 200px;
+  margin: 0 10px;
+}
+
+.image_row{
+  text-align: center; /* Center the images horizontally */
+}
+
+.image_row img{
+ width: 60px;
+ display: inline-block;
+ vertical-align: middle;
+ margin: 0 10px;
+}
+
+.topRow{
+  display: flex;
+  align-items: row-flex;
+}
+
+/* product-details layout */
+.product-details-layout nav {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  margin: 20px 0px;
+  font-size: 12px;
+}
+.product-details-layout nav a{
+  padding: 5px;
+  border: 2px solid gray;
+  border-radius: 4px;
+  text-decoration: underline;
+}
+.product-details-layout nav a:hover{
+  border-color: var(--primary);
+}
+.product-details-layout nav a.active {
+  background: var(--primary);
+}
+
+
+/* breadcrumbs */
+.breadcrumbs {
+  max-width: 1200px;
+  margin: 20px auto;
+}
+.breadcrumbs > *{
+  display: inline-block;
+  margin-right: 10px;
+}
+.breadcrumbs .crumb:after {
+  content: '>';
+  margin-left: 10px;
+}
+.breadcrumbs .crumb:last-child:after {
+  display: none;
+}
+.breadcrumbs .crumb a {
+  color: #ddd;
+}
+
+.Dictionary{
+  background-color: white;
+  color:black;
+}
+
+.theKey{
+  font: 1em arial;
+  background-color: white;
+  color:black;
+  text-align: right;
+  padding: 10px;
+}
+
+.theValue{
+  font: 1em arial;
+  background-color: white;
+  color:black;
+  padding: 10px;
+}
+
+.LoginPanel{
+  display: flex;
+  align-items: center; /* align items vertically */
+  justify-content: center; /* center items horizontally */
+  flex-direction: column; /* stack items vertically */ 
+}
