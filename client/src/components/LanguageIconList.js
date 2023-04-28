@@ -7,7 +7,16 @@ const LanguageIconList = ({ languages }) => {
     // const { user } = useSelector((state) => state.auth)
 
     //   console.log(loaded_languages)
-    languages = ["id", "en"]
+    languages = [
+        {
+            "code": "en",
+            "name": "English"
+        },
+        {
+            "code": "id",
+            "name": "Indonesian"
+        }
+    ]
     // console.log(languages)
     const [selectedLanguage, setSelectedLanguage] = useState(null);
 
@@ -32,7 +41,7 @@ const LanguageIconList = ({ languages }) => {
         {languages.map((language, index) => (
           <React.Fragment key={index}><li  style={{ marginRight: '5px', marginLeft: '5px' }}>
                 <img
-                    src={`img/${language}.png`}
+                    src={`img/${language.code}.png`}
                     alt={language.name}
                     style={{
                         width: `${iconSize}`,
