@@ -1,9 +1,8 @@
-import { useLoaderData, useParams } from 'react-router-dom'
+import { useLoaderData } from 'react-router-dom'
 import {recordFromStrapiAPI} from '../../hooks/useFetch'
 
 const CareerDetails = () => {
 
-    const { id } = useParams()
     const career = useLoaderData()
 
 

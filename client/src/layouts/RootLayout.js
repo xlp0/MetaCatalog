@@ -1,5 +1,7 @@
 import {NavLink, Outlet} from 'react-router-dom'
 import Breadcrumbs from '../components/Breadcrumbs'
+import LanguageIconList from '../components/LanguageIconList'
+
 
 const RootLayout = () => {
   return (
@@ -7,10 +9,7 @@ const RootLayout = () => {
         <header className="main-header-wrapper">
           <div className="helper-menu">
         <div className="container-fluid">
-          <div className="language-choice">
-            <img src="/img/id.png" alt="Indoensian" height="20px"></img>
-            <img src="/img/en.png" alt="English" height="20px"></img>
-          </div>
+          <LanguageIconList />
         </div>
         </div>
 

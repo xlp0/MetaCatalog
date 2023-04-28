@@ -3,6 +3,7 @@ import { arrayFromStrapiAPI } from '../hooks/useFetch'
 import {ethers} from 'ethers'
 import SS_ABI from '../features/blockchain/SimpleStore_abi.json'
 import CS_ABI from '../features/blockchain/ChangeSuggestion_abi.json'
+import ShowCaseBanner from '../components/ShowCaseBanner'
 
 
 
@@ -12,6 +13,7 @@ const Home = () => {
   const [accountList, setAccountList] = useState([])
   const [errorMessage, setErrorMessage] = useState(null);
   const [defaultAccount, setDefaultAccount] = useState("");
+  // eslint-disable-next-line no-unused-vars
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
   const [contract, setContract] = useState(null);
@@ -109,41 +111,7 @@ const Home = () => {
   return (
     <div>
       <div><img src="/img/eKatalog_Banner_v5.0.x.jpg" alt="HOME PAGE BANNER" height="300px"></img></div>
-      <div className="NAV_WRAPPER">
-        <div className="NAV_BOX" title="National Product Showcase">
-          <div className="comp-category">
-            <img src="/img/k-nasional.svg" alt="National" ></img>
-            <h4 className="title-category">National</h4>
-          </div>
-        </div>
-        <div className="NAV_BOX" title="Local Product Showcase">
-          <div className="comp-category"><img src="/img/k-lokal.svg" alt="National" ></img>
-          <h4 className="title-category">Local</h4>
-        </div>
-        </div>
-        <div className="NAV_BOX" title="Sectoral Product Showcase">
-          <div className="comp-category"><img src="/img/k-sektoral.svg" alt="National" ></img>
-          <h4 className="title-category">Sectoral</h4>
-        </div>
-        </div>
-        <div className="NAV_BOX" title="SME Product Showcase">
-          <div className="comp-category"><img src="/img/k-ukm.svg" alt="National" ></img>
-          <h4 className="title-category">UMKK</h4>
-        </div>
-        </div>
-        <div className="NAV_BOX" title="Innovation Product Showcase">
-          <div className="comp-category"><img src="/img/k-inovasi.svg" alt="Innovation" ></img>
-          <h4 className="title-category">Innovation</h4>
-        </div>
-        </div>
-        <div className="NAV_BOX" title="TKDN">
-          <div className="comp-category"><img src="/img/bbi.svg" alt="TKDN" ></img>
-          <h4 className="title-category">TKDN</h4>
-        </div>
-        </div>
-      </div>
-
- 
+      <ShowCaseBanner />
       <div className="LoginPanel">
         <p>Please Login using MetaMask</p>
         <hr />        

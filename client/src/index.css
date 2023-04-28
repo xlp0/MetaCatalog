@@ -61,6 +61,17 @@ container-fluid{
   display: table;
 }
 
+ul {
+  list-style-type: none; /* remove bullet points */
+  display: flex; /* display list items horizontally */
+  justify-content: flex-end; /* align list items to the right */
+  align-items: center; /* center list items vertically */
+}
+
+li {
+  margin-right: 5px; /* add some space between list items */
+}
+
 /* navbar */
 
 header nav {
