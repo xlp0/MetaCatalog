@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { arrayFromStrapiAPI } from '../hooks/useFetch'
 import {ethers} from 'ethers'
-import SS_ABI from '../components/SimpleStore_abi.json'
-import CS_ABI from '../components/ChangeSuggestion_abi.json'
+import SS_ABI from '../features/blockchain/SimpleStore_abi.json'
+import CS_ABI from '../features/blockchain/ChangeSuggestion_abi.json'
 
 
 

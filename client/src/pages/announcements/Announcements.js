@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+// import React, { useEffect, useState } from 'react'
 import {ethers} from 'ethers'
-import CS_ABI from '../../components/ChangeSuggestion_abi.json'
+import CS_ABI from '../../features/blockchain/ChangeSuggestion_abi.json'
 
 // const PROVIDER_URL = process.env.REACT_APP_ALCHEMY_BASE_URL;
 // const PROVIDER_API_KEY = process.env.REACT_APP_ALCHEMY_KEY;
@@ -25,7 +25,7 @@ const Announcements = () => {
             event
           }
         console.log(res)
-        const filter = contract.filters[eventName]();
+        // const filter = contract.filters[eventName]();
         console.log("Filters in contract:" + JSON.stringify(contract.filters))
 
         console.log("Contract event data:" + JSON.stringify(contract.queryFilter(eventName, 8662347 - 10000, 8662347)))

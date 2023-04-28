@@ -1,5 +1,5 @@
 import {ethers} from 'ethers'
-import CS_ABI from '../../components/ChangeSuggestion_abi.json'
+import CS_ABI from '../../features/blockchain/ChangeSuggestion_abi.json'
 import { useEffect, useState } from 'react';
 
 const PublishedEvents = () => {
