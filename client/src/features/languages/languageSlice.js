@@ -12,7 +12,7 @@ const initialState = {
 // get instructions
 export const getLanguages = createAsyncThunk(
   'languages/get',
-  async (instructionData, thunkAPI) => {
+  async (thunkAPI) => {
     try {
       return await languageService.getLanguages()
     } catch (error) {
@@ -41,7 +41,8 @@ export const languageSlice = createSlice({
       .addCase(getLanguages.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.instructions.push(action.payload)
+        state.languages = action.payload
+        // console.log("GET LANGUAGES" + JSON.stringify(state.languages))
       })
       .addCase(getLanguages.rejected, (state, action) => {
         state.isLoading = false

@@ -8,7 +8,23 @@
         "name": "Indonesian"
     },
     {
-        "code": "es",
-        "name": "Spanish"
+        "code": "us",
+        "name": "United States"
+    },
+    {
+        "code": "jp",
+        "name": "Japanese"
+    },
+    {
+        "code": "pl",
+        "name": "Poland"
+    },
+    {
+        "code": "tw",
+        "name": "Taiwan, Republic of China"
+    },
+    {
+        "code": "blg",
+        "name": "Belgium"
     }
 ]

@@ -1,28 +1,31 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
+function LanguageIconList({ languages }) {
 
-const LanguageIconList = ({ languages }) => {
+  const { user } = useSelector((state) => state.auth)
+  const { languageList, isLoading, isError, message } = useSelector(
+    (state) => state.languages
+  )
 
-    // const dispatch = useDispatch()
-    // const { user } = useSelector((state) => state.auth)
 
-    //   console.log(loaded_languages)
+  if (languages === undefined){
     languages = [
-        {
-            "code": "en",
-            "name": "English"
-        },
-        {
-            "code": "id",
-            "name": "Indonesian"
-        }
-    ]
-    // console.log(languages)
+      {
+          "code": "en",
+          "name": "English"
+      },
+      {
+          "code": "id",
+          "name": "Indonesian"
+      }
+  ]
+  }
+
     const [selectedLanguage, setSelectedLanguage] = useState(null);
 
     const handleLanguageClick = (language) => {
       setSelectedLanguage(language);
-      console.log("selected language:" + language);
+      console.log("selected language:" + language?.name);
     };
   
     const handleLanguageMouseEnter = (event) => {
