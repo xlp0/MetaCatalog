@@ -28,6 +28,11 @@ body {
 p {
   margin: 20px 0;
 }
+
+.borderedInput {
+  border: 1px solid black;
+}
+
 button {
   border: 0;
   padding: 8px;
