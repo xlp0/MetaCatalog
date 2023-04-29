@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {ethers} from 'ethers'
 import SS_ABI from '../features/blockchain/SimpleStore_abi.json'
 import CS_ABI from '../features/blockchain/ChangeSuggestion_abi.json'
@@ -129,7 +129,6 @@ const WalletConnection = () => {
         <h3>{currentContractVal}
         {errorMessage}
         </h3>:
-        }
 
       </div>
     </div>
