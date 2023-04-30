@@ -90,6 +90,8 @@ const WalletConnection = () => {
   const submitValueToContract = (e) => {
     e.preventDefault();
     contract.set(e.target.setText.value);  
+    e.target.setText.value = '';
+    setIsLoading(true);
     fetchValueFromEthereum();
   }
 
@@ -129,12 +131,12 @@ const WalletConnection = () => {
           </h3>
 
         <form onSubmit={submitValueToContract}>
-            <input id='setText' type='text' className="borderedInput" />
+            <input className="borderedInput" id='setText' type='text' placeholder="Type content to be send to the contract"  />
             <button type='submit'>Update Contract</button>
         </form>
        <p>--- Updated Contract Value ---</p>
         {/* <button onClick={getCurrentVal} > Get Current Value </button> */}
-        <h3>{currentContractVal}
+        <h3>{isLoading ? <div>{WIP_INDICATOR_STRING}</div> : <div>{currentContractVal}</div>}
         {errorMessage}
         </h3>:
 
