@@ -1,39 +1,39 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {ethers} from 'ethers'
 import SS_ABI from '../features/blockchain/SimpleStore_abi.json'
-import CS_ABI from '../features/blockchain/ChangeSuggestion_abi.json'
 import {Link} from 'react-router-dom'
-
-
 
 const WalletConnection = () => {
 
   const [errorMessage, setErrorMessage] = useState(null);
   const [defaultAccount, setDefaultAccount] = useState("");
   // eslint-disable-next-line no-unused-vars
+  const [isLoading, setIsLoading] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
   const [contract, setContract] = useState(null);
   const [connectButtonText, setConnectButtonText] = useState("Connect Wallet");
-  const [currentContractVal, setCurrentContractVal] = useState("NONE");
+  const WIP_INDICATOR_STRING = "Waiting for value from the blockchain ..."
+  const [currentContractVal, setCurrentContractVal] = useState(WIP_INDICATOR_STRING);
 
-  // const contractAddress = '0x9548fdB78500070aF3C1f1EE421931Cf3857530a'
   const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
 
 
   const listenToEvent = () => {
     console.log("Listen to Event called...");
-    const contract = new ethers.Contract(
-                      process.env.REACT_APP_CHANGE_EVENT_CONTRACT_ADDRESS, 
-                      CS_ABI, 
+    setIsLoading(true)
+    const listeningContract = new ethers.Contract(
+                      contractAddress, 
+                      SS_ABI, 
                       signer);
-                      contract.on("ChangeSuggestionSubmitted", (proposer, data, event) => {
+                      listeningContract.on("setDataEvent", (eventOutput) => {
                         let res = {
-                          proposer,
-                          data,
-                          event
+                          eventOutput
                         }
-                        console.log(res)
+                        setIsLoading(false)
+                        fetchValueFromEthereum()
+                        console.log("DATA FROM EVENT:" + JSON.stringify(res))
                       })
   }
 
@@ -63,6 +63,7 @@ const WalletConnection = () => {
             .then( result => {
             accountChangeHandler(result[0]);
             setConnectButtonText("Wallet Connected");
+            updateCurrentValue();
             })
         }catch(err){
             console.log(err);
@@ -74,29 +75,27 @@ const WalletConnection = () => {
     
  }
 
-  const getCurrentVal = async () => {
-    const fetchValueFromEthereum = async () => {
-      let val = await contract.get();
-      console.log("contract fetched value:" + val)
-      setCurrentContractVal(val);
-    }
+  const updateCurrentValue = async () => {
     listenToEvent();
-    fetchValueFromEthereum();
   }
 
-  const setHandler = (e) => {
+  const fetchValueFromEthereum = async () => {
+    setCurrentContractVal(WIP_INDICATOR_STRING);
+    let val = await contract.get();
+    console.log("fecthValueFromEthereum called:" + val)
+    setCurrentContractVal(val);
+    return val;
+  }
+
+  const submitValueToContract = (e) => {
     e.preventDefault();
-
-    const fetchValueFromEthereum = async () => {
-      contract.set(e.target.setText.value);
-      let val = await contract.get();
-      console.log("contract fetched value:" + val)
-      setCurrentContractVal(val);
-    }
+    contract.set(e.target.setText.value);  
     fetchValueFromEthereum();
-
   }
 
+    useEffect(() => {
+        console.log("useEffect called:" + currentContractVal)
+    }, [currentContractVal, isLoading])
 
   return (
     <div>
@@ -119,13 +118,22 @@ const WalletConnection = () => {
           <div> No connected account, yet </div>
         }
         
+        
+        <h3>
+        <p>---</p>
+            <hr/>
+            Solidity Contract Address: 
+            <Link to={`https://goerli.etherscan.io/address/${contractAddress}`} target="_blank" rel="noopener noreferrer">
+            {contractAddress}
+            </Link>
+          </h3>
 
-        <form onSubmit={setHandler}>
+        <form onSubmit={submitValueToContract}>
             <input id='setText' type='text' className="borderedInput" />
             <button type='submit'>Update Contract</button>
         </form>
-       <p>---</p>
-        <button onClick={getCurrentVal} >Get Current Value </button>
+       <p>--- Updated Contract Value ---</p>
+        {/* <button onClick={getCurrentVal} > Get Current Value </button> */}
         <h3>{currentContractVal}
         {errorMessage}
         </h3>:
