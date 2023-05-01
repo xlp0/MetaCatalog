@@ -1,13 +1,15 @@
 import {ethers} from 'ethers'
 // import CS_ABI from '../../features/blockchain/ChangeSuggestion_abi.json'
-import SS_ABI from '../../features/blockchain/SimpleStore_abi.json'
+// import SS_ABI from '../../features/blockchain/SimpleStore_abi.json'
+import AC_ABI from '../../features/blockchain/AccountableChange_abi.json'
 import { useEffect, useState } from 'react';
 import {Link} from 'react-router-dom'
 
 const PublishedEvents = () => {
   
   const ETHERSCAN_PREFIX = "https://goerli.etherscan.io/address/"
-  const eventName = "setDataEvent"
+  const CONTRACT_ADDRESS = process.env.REACT_APP_ACCOUNTABLE_CHANGE_CONTRACT_ADDRESS
+  const eventName = "ChangeSubmitted"
   
   const [provider, setProvider] = useState(null);
   const [events, setEvents] = useState([]);
@@ -23,7 +25,7 @@ const PublishedEvents = () => {
     let currentBlkNum = await aProvider.getBlockNumber();
     console.log("Current Block Number" + currentBlkNum);
 
-    const contract = await new ethers.Contract(process.env.REACT_APP_CONTRACT_ADDRESS, SS_ABI, aProvider)
+    const contract = await new ethers.Contract(CONTRACT_ADDRESS, AC_ABI, aProvider)
 
     const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
     setEvents(fetchedEvents)
@@ -37,7 +39,7 @@ const PublishedEvents = () => {
     let currentBlkNum = await aProvider.getBlockNumber();
     console.log("Current Block Number" + currentBlkNum);
 
-    const contract = await new ethers.Contract(process.env.REACT_APP_CONTRACT_ADDRESS, SS_ABI, aProvider)
+    const contract = await new ethers.Contract(CONTRACT_ADDRESS, AC_ABI, aProvider)
 
     const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
     setEvents(fetchedEvents)
@@ -53,7 +55,7 @@ const PublishedEvents = () => {
     let currentBlkNum = await aProvider.getBlockNumber();
     console.log("Current Block Number" + currentBlkNum);
 
-    const contract = await new ethers.Contract(process.env.REACT_APP_CONTRACT_ADDRESS, SS_ABI, aProvider)
+    const contract = await new ethers.Contract(CONTRACT_ADDRESS, AC_ABI, aProvider)
 
     const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
     const oneEvent = fetchedEvents[0];
@@ -65,8 +67,8 @@ const PublishedEvents = () => {
     const fetchData = async () => {
       const rows = await Promise.all(
         events.map(async (event) => {
-          const proposer =  process.env.REACT_APP_CONTRACT_ADDRESS;
-          const data =  event.args.eventOutput;
+          const proposer =  event.args.sender;
+          const data =  event.args.data;
           return { proposer, data };
         })
       );
@@ -88,7 +90,7 @@ const PublishedEvents = () => {
         <p>Event List Table</p>
         <p>From {providerName}</p>
         <table>
-          <th>proposer</th><th>data</th>
+          <th>Change Submission Account </th><th>   Change Instruction</th>
         {tableData.map( (entry) => (
         <tr>
           <td><Link to={`${ETHERSCAN_PREFIX}${entry?.proposer}`} target="_blank" rel="noopener noreferrer">{entry?.proposer}</Link></td>
