@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {ethers} from 'ethers'
-import SS_ABI from '../features/blockchain/SimpleStore_abi.json'
+import AC_ABI from '../features/blockchain/AccountableChange_abi.json'
 import {Link} from 'react-router-dom'
 
 const WalletConnection = () => {
@@ -17,7 +17,8 @@ const WalletConnection = () => {
   const WIP_INDICATOR_STRING = "Waiting for value from the blockchain ..."
   const [currentContractVal, setCurrentContractVal] = useState(WIP_INDICATOR_STRING);
 
-  const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
+  const contractAddress = process.env.REACT_APP_ACCOUNTABLE_CHANGE_CONTRACT_ADDRESS;
+  const eventName = "ChangeSubmitted"
 
 
   const listenToEvent = () => {
@@ -25,9 +26,9 @@ const WalletConnection = () => {
     setIsLoading(true)
     const listeningContract = new ethers.Contract(
                       contractAddress, 
-                      SS_ABI, 
+                      AC_ABI, 
                       signer);
-                      listeningContract.on("setDataEvent", (eventOutput) => {
+                      listeningContract.on(eventName, (eventOutput) => {
                         let res = {
                           eventOutput
                         }
@@ -45,7 +46,7 @@ const WalletConnection = () => {
     let tempSigner = tempProvider.getSigner();
     setSigner(tempSigner);
 
-    let tempContract = new ethers.Contract(contractAddress, SS_ABI, tempSigner);
+    let tempContract = new ethers.Contract(contractAddress, AC_ABI, tempSigner);
     setContract(tempContract);
  }
 
@@ -81,7 +82,10 @@ const WalletConnection = () => {
 
   const fetchValueFromEthereum = async () => {
     setCurrentContractVal(WIP_INDICATOR_STRING);
-    let val = await contract.get();
+    let currentBlkNum = await provider.getBlockNumber();
+    const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
+    const latestEvent = fetchedEvents.pop();
+    let val = latestEvent.args.sender + ":" + latestEvent.args.data;
     console.log("fecthValueFromEthereum called:" + val)
     setCurrentContractVal(val);
     return val;
@@ -89,7 +93,7 @@ const WalletConnection = () => {
 
   const submitValueToContract = (e) => {
     e.preventDefault();
-    contract.set(e.target.setText.value);  
+    contract.submitChange(e.target.setText.value);  
     e.target.setText.value = '';
     setIsLoading(true);
     fetchValueFromEthereum();

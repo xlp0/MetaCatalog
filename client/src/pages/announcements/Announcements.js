@@ -1,108 +1,105 @@
-// import React, { useEffect, useState } from 'react'
 import {ethers} from 'ethers'
-import CS_ABI from '../../features/blockchain/ChangeSuggestion_abi.json'
-
-// const PROVIDER_URL = process.env.REACT_APP_ALCHEMY_BASE_URL;
-// const PROVIDER_API_KEY = process.env.REACT_APP_ALCHEMY_KEY;
-
-// const nodeProvider = `${PROVIDER_URL}/${PROVIDER_API_KEY}`;
+// import CS_ABI from '../../features/blockchain/ChangeSuggestion_abi.json'
+// import SS_ABI from '../../features/blockchain/SimpleStore_abi.json'
+import AC_ABI from '../../features/blockchain/AccountableChange_abi.json'
+import { useEffect, useState } from 'react';
+import {Link} from 'react-router-dom'
 
 const Announcements = () => {
+  
+  const ETHERSCAN_PREFIX = "https://goerli.etherscan.io/address/"
+  const CONTRACT_ADDRESS = process.env.REACT_APP_ACCOUNTABLE_CHANGE_CONTRACT_ADDRESS
+  const eventName = "AuthorizationChanged"
+  
+  const [provider, setProvider] = useState(null);
+  const [events, setEvents] = useState([]);
+  const [tableData, setTableData] = useState([]);
+  const [providerName, setProviderName] = useState("No Provider")
 
-  const provider = new ethers.providers.InfuraProvider("goerli", process.env.REACT_APP_INFURA_PROJECT_ID);
-  const eventName = "ChangeSuggestionSubmitted"
 
+  const queryFilterWithInfura = async () => {
+    const aProvider = new ethers.providers.InfuraProvider("goerli", process.env.REACT_APP_INFURA_PROJECT_ID);
+    setProvider(aProvider);
+    setProviderName("Infura:" + aProvider.connection.url);
 
-  const startListeningToEvents = () => {
-    console.log("startListeningToEvents fired!")
-
-      const connect =  async () => {
-        const contract = await new ethers.Contract(process.env.REACT_APP_CHANGE_EVENT_CONTRACT_ADDRESS, CS_ABI, provider)
-        contract.on(eventName, (proposer, data, event) => {
-          let res = {
-            proposer,
-            data,
-            event
-          }
-        console.log(res)
-        // const filter = contract.filters[eventName]();
-        console.log("Filters in contract:" + JSON.stringify(contract.filters))
-
-        console.log("Contract event data:" + JSON.stringify(contract.queryFilter(eventName, 8662347 - 10000, 8662347)))
-      })
-      }
-      connect();
-  }
-
-  const showBlockNumber = async () => {
-    let currentBlkNum = await provider.getBlockNumber();
+    let currentBlkNum = await aProvider.getBlockNumber();
     console.log("Current Block Number" + currentBlkNum);
 
-    const eventSig = eventName+'(address,string)'
-    const eventTopic = ethers.utils.id(eventSig)
+    const contract = await new ethers.Contract(CONTRACT_ADDRESS, AC_ABI, aProvider)
 
-    let rawLogs = await provider.getLogs({
-      address:process.env.REACT_APP_CHANGE_EVENT_CONTRACT_ADDRESS,
-      topics: [eventTopic],
-      fromBlock: 0,
-      toBlock: currentBlkNum
-    })
-
-    // console.log(rawLogs)
-
-    const abi_interface = new ethers.utils.Interface(CS_ABI);
-
-    rawLogs.forEach((log) => {
-      // console.log(`BEFORE PARSING:`);
-      // console.log(log);
-      // console.log(`\n`);
-
-      console.log(`AFTER PARSING:`);
-      let parsedLog = abi_interface.parseLog(log);
-      console.log(parsedLog);
-      console.log('************************************************');
-  })
-
+    const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
+    setEvents(fetchedEvents)
   }
 
-  const queryFilter = async () => {
-    console.log('*************Query Filter*******************');
-    let currentBlkNum = await provider.getBlockNumber();
+  const queryFilterWithAlchemy = async () => {
+    const aProvider = new ethers.providers.AlchemyProvider("goerli", process.env.REACT_APP_ALCHEMY_KEY);
+    setProvider(aProvider);
+    setProviderName("Alchemy:" + aProvider.connection.url);
+
+    let currentBlkNum = await aProvider.getBlockNumber();
     console.log("Current Block Number" + currentBlkNum);
 
-    const eventSig = eventName+'(address,string)'
-    const eventTopic = ethers.utils.id(eventSig)
+    const contract = await new ethers.Contract(CONTRACT_ADDRESS, AC_ABI, aProvider)
 
-    const contract = await new ethers.Contract(process.env.REACT_APP_CHANGE_EVENT_CONTRACT_ADDRESS, CS_ABI, provider)
-
-    let filter = {
-      address:process.env.REACT_APP_CHANGE_EVENT_CONTRACT_ADDRESS,
-      topics: [eventTopic],
-      fromBlock: 0,
-      toBlock: currentBlkNum
-    }
-
-    const events = await contract.queryFilter(filter, 0, currentBlkNum);
-    console.log("Contract event data:" + JSON.stringify(events))
-
-    console.log(events[18].args.data)
-
-
+    const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
+    setEvents(fetchedEvents)
   }
+
+  const queryFilterWithEtherscan = async () => {
+    const aProvider = new ethers.providers.EtherscanProvider("goerli", process.env.REACT_APP_ETHERSCAN_KEY);
+    setProvider(aProvider);
+    setProviderName("Etherscan:" + aProvider.getBaseUrl());
+
+    const url =  aProvider.getBaseUrl()
+    console.log("Use Etherscan Provider URL:" + JSON.stringify(url));
+    let currentBlkNum = await aProvider.getBlockNumber();
+    console.log("Current Block Number" + currentBlkNum);
+
+    const contract = await new ethers.Contract(CONTRACT_ADDRESS, AC_ABI, aProvider)
+
+    const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
+    const oneEvent = fetchedEvents[0];
+    console.log("blockTimestamp:" + oneEvent.blockTimestamp)
+    setEvents(fetchedEvents.reverse())
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const rows = await Promise.all(
+        events.map(async (event) => {
+          const changedAccount =  event.args.account;
+          const data =  event.args.authorized;
+          return { changedAccount, data };
+        })
+      );
+      setTableData(rows);
+    };
+    fetchData()
+    console.log("Selected Provider: " + JSON.stringify(provider))
+  }, [provider, providerName, events])
 
   return (
+    <div>
+    <div>Announcements</div>
       <div>
-        <div>Announcements</div>
-        <button onClick={startListeningToEvents}>Start Listening to Events</button>
-
-        <button onClick={showBlockNumber}>Show Block Number</button>
-
-        <button onClick={queryFilter}>Use Query Filter</button>
-
-
+        <button onClick={queryFilterWithInfura}>Query Event - Infura Provider </button>
+        <button onClick={queryFilterWithAlchemy}>Query Filter - Alchemy</button>
+        <button onClick={queryFilterWithEtherscan}>Query Filter - Etherscan</button>
       </div>
+      <div className="container">
+        <p>Event List Table</p>
+        <p>From {providerName}</p>
+        <table>
+          <th> Account with Authority Change </th><th>   Status  </th>
+        {tableData.map( (entry) => (
+        <tr>
+          <td><Link to={`${ETHERSCAN_PREFIX}${entry?.changedAccount}`} target="_blank" rel="noopener noreferrer">{entry?.changedAccount}</Link></td>
+          <td>{entry?.data ? "YES" : "NO" }</td>
+        </tr>))}
+        </table>
+      </div>
+  </div>
   )
-  
 }
 
 export default Announcements
