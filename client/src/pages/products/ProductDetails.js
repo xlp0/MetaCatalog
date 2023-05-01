@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useLoaderData } from 'react-router-dom'
 import { imageList, theImage, priceString } from '../../hooks/formatters'
+import WalletConnection from '../../components/WalletConnection'
 
 const productList = require("./" + process.env.REACT_APP_SAMPLE_DATA_IN_PUBLIC_DIR)
 
@@ -32,6 +33,9 @@ const ProductDetails = () => {
 
     <div className="details"> </div>
     <p>{product?.spesifikasi}</p>
+    
+    <WalletConnection />
+    
     </div>
         <div className="product-details-layout">
         <nav>
@@ -41,6 +45,7 @@ const ProductDetails = () => {
         </nav>
         <Outlet someProp={12343243} />
     </div>
+    
 </>
 
 

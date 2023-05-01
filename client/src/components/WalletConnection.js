@@ -19,6 +19,18 @@ const WalletConnection = () => {
 
   const contractAddress = process.env.REACT_APP_ACCOUNTABLE_CHANGE_CONTRACT_ADDRESS;
   const eventName = "ChangeSubmitted"
+  const WALLET_CONNECTED_TEXT = "Wallet Connected"
+
+  const [value, setValue] = useState('');
+
+  const handleChange = (event) => {
+    const regex = /^[1-9]\d*$/; // positive integer regex
+    const inputValue = event.target.value;
+
+    if (regex.test(inputValue) || inputValue === '') {
+      setValue(inputValue);
+    }
+  };
 
 
   const listenToEvent = () => {
@@ -63,7 +75,7 @@ const WalletConnection = () => {
             window.ethereum.request({method: 'eth_requestAccounts'})
             .then( result => {
             accountChangeHandler(result[0]);
-            setConnectButtonText("Wallet Connected");
+            setConnectButtonText(WALLET_CONNECTED_TEXT);
             updateCurrentValue();
             })
         }catch(err){
@@ -93,7 +105,10 @@ const WalletConnection = () => {
 
   const submitValueToContract = (e) => {
     e.preventDefault();
-    contract.submitChange(e.target.setText.value);  
+    const valueToBeSent = { no_produk: "4522100001-PEP-001442670", price: value}
+    let strValue = JSON.stringify(valueToBeSent)
+
+    contract.submitChange(strValue);  
     e.target.setText.value = '';
     setIsLoading(true);
     fetchValueFromEthereum();
@@ -109,10 +124,9 @@ const WalletConnection = () => {
         <p>You will need to have MetaMask installed in your browser to use this panel</p>
         <hr />        
 
-        <h3>{'Get/Set Interaction with contract!'}</h3>
         <button onClick={connectWalletHandler}>{connectButtonText}</button>
         
-
+        
         {defaultAccount ?
           <h3>
             Ethereum Address: 
@@ -125,25 +139,38 @@ const WalletConnection = () => {
         }
         
         
-        <h3>
-        <p>---</p>
-            <hr/>
-            Solidity Contract Address: 
-            <Link to={`https://goerli.etherscan.io/address/${contractAddress}`} target="_blank" rel="noopener noreferrer">
-            {contractAddress}
-            </Link>
-          </h3>
+        {defaultAccount ? (
+  <div>
+    <h3>
+      <p>---</p>
+      <hr />
+      Solidity Contract Address:{" "}
+      <Link to={`https://goerli.etherscan.io/address/${contractAddress}`} target="_blank" rel="noopener noreferrer">
+        {contractAddress}
+      </Link>
+    </h3>
 
-        <form onSubmit={submitValueToContract}>
-            <input className="borderedInput" id='setText' type='text' placeholder="Type content to be send to the contract"  />
-            <button type='submit'>Update Contract</button>
-        </form>
-       <p>--- Updated Contract Value ---</p>
-        {/* <button onClick={getCurrentVal} > Get Current Value </button> */}
-        <h3>{isLoading ? <div>{WIP_INDICATOR_STRING}</div> : <div>{currentContractVal}</div>}
-        {errorMessage}
-        </h3>:
+    <form onSubmit={submitValueToContract}>
+      <h3>New Price:</h3>
+      <input className="borderedInput" id="setText" value={value} onChange={handleChange} type="text" placeholder="Type content to be send to the contract" />
+      <button type="submit">Submit Change Request</button>
+    </form>
+    <p>--- Updated Contract Value ---</p>
+    {/* <button onClick={getCurrentVal} > Get Current Value </button> */}
+    <h3>
+      {isLoading ? (
+        <div>{WIP_INDICATOR_STRING}</div>
+      ) : (
+        <div>{currentContractVal}</div>
+      )}
+      {errorMessage}
+    </h3>
+  </div>
+) : (
+  ""
+)}
 
+      
       </div>
     </div>
   )

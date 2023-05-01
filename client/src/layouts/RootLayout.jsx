@@ -70,10 +70,6 @@ const RootLayout = ( knownLanguages ) => {
             </nav>
             <Breadcrumbs />
         </header>
-        <main>
-            <Outlet />
-        </main>
-
         <nav>
             <div>
                 <NavLink to="/">Home</NavLink>
@@ -84,6 +80,9 @@ const RootLayout = ( knownLanguages ) => {
                 <NavLink to="about">About</NavLink>
               </div>
         </nav>
+        <main>
+            <Outlet />
+        </main>
 
     </div>
   )
