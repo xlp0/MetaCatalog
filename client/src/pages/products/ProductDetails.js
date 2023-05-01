@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useLoaderData } from 'react-router-dom'
-import {recordFromStrapiAPI} from '../../hooks/useFetch'
 import { imageList, theImage, priceString } from '../../hooks/formatters'
+
+const productList = require("./" + process.env.REACT_APP_SAMPLE_DATA_IN_PUBLIC_DIR)
 
 const ProductDetails = () => {
 
@@ -52,10 +53,7 @@ export default ProductDetails
 // loader functions
 export const productDetailsLoader = async ( {params} ) => {
     const { id } = params
-
-    const res = await recordFromStrapiAPI('produks' , id)
-    if (null === res){
-      throw Error('Could not fetch product details...')
-    }
-    return res
+    const product = productList.find(product => product.no_produk === id);
+    console.log("id passed in:" + id)
+    return product
 }

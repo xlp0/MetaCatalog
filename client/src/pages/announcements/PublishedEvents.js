@@ -1,10 +1,14 @@
 import {ethers} from 'ethers'
-import CS_ABI from '../../features/blockchain/ChangeSuggestion_abi.json'
+// import CS_ABI from '../../features/blockchain/ChangeSuggestion_abi.json'
+import SS_ABI from '../../features/blockchain/SimpleStore_abi.json'
 import { useEffect, useState } from 'react';
+import {Link} from 'react-router-dom'
 
 const PublishedEvents = () => {
-
-  const eventName = "ChangeSuggestionSubmitted"
+  
+  const ETHERSCAN_PREFIX = "https://goerli.etherscan.io/address/"
+  const eventName = "setDataEvent"
+  
   const [provider, setProvider] = useState(null);
   const [events, setEvents] = useState([]);
   const [tableData, setTableData] = useState([]);
@@ -19,7 +23,7 @@ const PublishedEvents = () => {
     let currentBlkNum = await aProvider.getBlockNumber();
     console.log("Current Block Number" + currentBlkNum);
 
-    const contract = await new ethers.Contract(process.env.REACT_APP_CHANGE_EVENT_CONTRACT_ADDRESS, CS_ABI, aProvider)
+    const contract = await new ethers.Contract(process.env.REACT_APP_CONTRACT_ADDRESS, SS_ABI, aProvider)
 
     const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
     setEvents(fetchedEvents)
@@ -33,7 +37,7 @@ const PublishedEvents = () => {
     let currentBlkNum = await aProvider.getBlockNumber();
     console.log("Current Block Number" + currentBlkNum);
 
-    const contract = await new ethers.Contract(process.env.REACT_APP_CHANGE_EVENT_CONTRACT_ADDRESS, CS_ABI, aProvider)
+    const contract = await new ethers.Contract(process.env.REACT_APP_CONTRACT_ADDRESS, SS_ABI, aProvider)
 
     const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
     setEvents(fetchedEvents)
@@ -49,18 +53,20 @@ const PublishedEvents = () => {
     let currentBlkNum = await aProvider.getBlockNumber();
     console.log("Current Block Number" + currentBlkNum);
 
-    const contract = await new ethers.Contract(process.env.REACT_APP_CHANGE_EVENT_CONTRACT_ADDRESS, CS_ABI, aProvider)
+    const contract = await new ethers.Contract(process.env.REACT_APP_CONTRACT_ADDRESS, SS_ABI, aProvider)
 
     const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
-    setEvents(fetchedEvents)
+    const oneEvent = fetchedEvents[0];
+    console.log("blockTimestamp:" + oneEvent.blockTimestamp)
+    setEvents(fetchedEvents.reverse())
   }
 
   useEffect(() => {
     const fetchData = async () => {
       const rows = await Promise.all(
         events.map(async (event) => {
-          const proposer =  event.args.proposer;
-          const data =  event.args.data;
+          const proposer =  process.env.REACT_APP_CONTRACT_ADDRESS;
+          const data =  event.args.eventOutput;
           return { proposer, data };
         })
       );
@@ -83,10 +89,10 @@ const PublishedEvents = () => {
         <p>From {providerName}</p>
         <table>
           <th>proposer</th><th>data</th>
-        {tableData.map( (e) => (
+        {tableData.map( (entry) => (
         <tr>
-          <td>{e?.proposer}</td>
-          <td>{e?.data}</td>
+          <td><Link to={`${ETHERSCAN_PREFIX}${entry?.proposer}`} target="_blank" rel="noopener noreferrer">{entry?.proposer}</Link></td>
+          <td>{entry?.data}</td>
         </tr>))}
         </table>
       </div>

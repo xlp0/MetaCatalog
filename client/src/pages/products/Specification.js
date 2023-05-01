@@ -1,8 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import {recordFromStrapiAPI} from '../../hooks/useFetch'
 import KeyValueList from "../../components/KeyValueList";
-
+const productList = require("./" + process.env.REACT_APP_SAMPLE_DATA_IN_PUBLIC_DIR)
 
 const Specification = () => {
 
@@ -37,10 +36,7 @@ const Specification = () => {
 export default Specification
 
 export const fetchProductDetails = async ( id ) => {
-
-  const res = await recordFromStrapiAPI('produks' , id)
-  if (null === res){
-    throw Error('Could not fetch product details...')
-  }
-  return res
+  const product = productList.find(product => product.no_produk === id);
+  console.log("id passed in:" + id)
+  return product
 }

@@ -102,7 +102,7 @@ const WalletConnection = () => {
   return (
     <div>
       <div className="LoginPanel">
-        <p>Please Login using MetaMask</p>
+        <p>You will need to have MetaMask installed in your browser to use this panel</p>
         <hr />        
 
         <h3>{'Get/Set Interaction with contract!'}</h3>

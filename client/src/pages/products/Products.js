@@ -1,6 +1,7 @@
 import { useLoaderData, Link } from "react-router-dom";
-import { arrayFromStrapiAPI } from '../../hooks/useFetch'
 import { theImage, priceString } from '../../hooks/formatters'
+
+const productList = require("./" +process.env.REACT_APP_SAMPLE_DATA_IN_PUBLIC_DIR)
 
 const Products = () => {
     
@@ -9,7 +10,7 @@ const Products = () => {
   return (
     <div className="products">
         {products?.map(product => (
-            <Link to={product?.id?.toString()} key={product?.id}>
+            <Link to={product?.no_produk?.toString()} key={product?.no_produk}>
                 <p><img className="product_avatar" src={theImage(product?.produk_gambar)} alt={theImage(product?.produk_gambar)} ></img>
                   {product?.nama_produk}, Made by: {product?.nama_manufaktur}</p>
                 <p>TKDN(%):{product?.tkdn_produk === null ? "0.0": product?.tkdn_produk} </p>
@@ -24,12 +25,15 @@ export default Products
 
 export const productsLoader = async () => {
 
-    const res = await arrayFromStrapiAPI("produks")
+  console.log("productsLoader running")
 
-    if (res.length <= 0){
-        throw Error('Could not fetch the list of products...')
-    }
-
+  try {
+    const res = productList
     return res
+    
+  } catch (err) {
+    console.error(err)
+  }
+  return null
 }
 
