@@ -16,7 +16,19 @@ const Announcements = () => {
   const [tableData, setTableData] = useState([]);
   const [providerName, setProviderName] = useState("No Provider")
 
+  const accountDictionary = {
+    "0x372C68C90f433C54c4AE06b4Ddf107ce8baB67Cc": "LKPP",
+    "0xF1E4cc03796c2d37d502CC484E3b67fB9Bf4E479": "Vendor 001",
+    "0x1c117Eb98169f2a81A17e18C07bD5ca44ee56411": "Finance Department",
+    "0xDd83c5776c274e78bD55Db135AA43210e838F5c8": "Transportation Department",
+  }
 
+  function nameLookup( str) {
+    if (accountDictionary[str]){
+      return accountDictionary[str]
+    }
+    return str
+  }
   const queryFilterWithInfura = async () => {
     const aProvider = new ethers.providers.InfuraProvider("goerli", process.env.REACT_APP_INFURA_PROJECT_ID);
     setProvider(aProvider);
@@ -90,10 +102,11 @@ const Announcements = () => {
         <p>Event List Table</p>
         <p>From {providerName}</p>
         <table>
-          <th> Account with Authority Change </th><th>   Status  </th>
+          <th> Account with Authority Change </th><th>   Agency represented by the Account   </th><th>   Status  </th>
         {tableData.map( (entry) => (
         <tr>
           <td><Link to={`${ETHERSCAN_PREFIX}${entry?.changedAccount}`} target="_blank" rel="noopener noreferrer">{entry?.changedAccount}</Link></td>
+          <td>{nameLookup(entry?.changedAccount)}</td>
           <td>{entry?.data ? "YES" : "NO" }</td>
         </tr>))}
         </table>
