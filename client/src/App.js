@@ -3,6 +3,7 @@ import {
   createBrowserRouter, 
   createRoutesFromElements, 
   Route, 
+  Routes,
   RouterProvider
 } from 'react-router-dom'
 import Home from './pages/Home';
@@ -28,6 +29,7 @@ import Announcements from './pages/announcements/Announcements';
 import News from './pages/news/News';
 import PublishedEvents from './pages/announcements/PublishedEvents';
 import Specification from './pages/products/Specification';
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(

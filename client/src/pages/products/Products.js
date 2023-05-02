@@ -1,14 +1,22 @@
 import { useLoaderData, Link } from "react-router-dom";
 import { theImage, priceString } from '../../hooks/formatters'
+import { useState } from 'react'
 
 const productList = require("./" +process.env.REACT_APP_SAMPLE_DATA_IN_PUBLIC_DIR)
 
 const Products = () => {
     
-    const products = useLoaderData();
+    const [productNumber, setProductNumber] = useState('');
+
+    const allProducts = useLoaderData();
+    
+    const products = allProducts.filter( item => item?.no_produk?.toLowerCase().includes(productNumber));
 
   return (
     <div className="products">
+      <label htmlFor="name-filter">Filter by Name:</label>
+      <input type="text" id="name-filter" value={productNumber} onChange={(e) => setProductNumber(e.target.value)} />
+
         {products?.map(product => (
             <Link to={product?.no_produk?.toString()} key={product?.no_produk}>
                 <p><img className="product_avatar" src={theImage(product?.produk_gambar)} alt={theImage(product?.produk_gambar)} ></img>
