@@ -4,6 +4,7 @@ import { useState } from 'react'
 
 const productList = require("./" +process.env.REACT_APP_SAMPLE_DATA_IN_PUBLIC_DIR)
 
+
 const Products = () => {
     
     const [productNumber, setProductNumber] = useState('');
@@ -14,8 +15,9 @@ const Products = () => {
 
   return (
     <div className="products">
-      <label htmlFor="name-filter">Filter by Name:</label>
+      <label htmlFor="name-filter">Filter by no_produk:</label>
       <input type="text" id="name-filter" value={productNumber} onChange={(e) => setProductNumber(e.target.value)} />
+
 
         {products?.map(product => (
             <Link to={product?.no_produk?.toString()} key={product?.no_produk}>
