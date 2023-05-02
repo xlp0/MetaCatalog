@@ -81,10 +81,10 @@ const Announcements = () => {
   return (
     <div>
     <div>Announcements</div>
-      <div>
-        <button onClick={queryFilterWithInfura}>Query Event - Infura Provider </button>
-        <button onClick={queryFilterWithAlchemy}>Query Filter - Alchemy</button>
-        <button onClick={queryFilterWithEtherscan}>Query Filter - Etherscan</button>
+      <div className="providerList">
+        <button onClick={queryFilterWithInfura}>Infura</button>
+        <button onClick={queryFilterWithAlchemy}>Alchemy</button>
+        <button onClick={queryFilterWithEtherscan}>Etherscan</button>
       </div>
       <div className="container">
         <p>Event List Table</p>

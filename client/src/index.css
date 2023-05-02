@@ -45,6 +45,12 @@
   align-items: center;
   
 }
+
+.providerList{
+  display: flex;
+  justify-content: space-evenly;
+}
+
 body {
   margin: 0;
   /* padding: 20px; */
