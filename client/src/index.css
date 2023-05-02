@@ -275,6 +275,10 @@ form label span {
   background: var(--primary);
 }
 
+.navigationLinkBar{
+  display: flex;
+  justify-content: space-evenly;
+}
 
 /* careers list */
 .careers > a {
@@ -439,7 +443,7 @@ form label span {
 
 a {
   text-decoration: none;
-  color: #000;
+  color: blue;
 }
 
 p {

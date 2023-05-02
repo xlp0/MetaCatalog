@@ -71,7 +71,7 @@ const RootLayout = ( knownLanguages ) => {
             <Breadcrumbs />
         </header>
         <nav>
-            <div>
+            <div className="navigationLinkBar">
                 <NavLink to="/">Home</NavLink>
                 <NavLink to="products">Products</NavLink>
                 <NavLink to="announcement">Announcements</NavLink>
