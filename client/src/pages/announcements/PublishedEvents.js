@@ -12,6 +12,7 @@ const PublishedEvents = () => {
   const ETHERSCAN_PREFIX = `${ETHER_NETWORK}` ? `https://${ETHER_NETWORK}.etherscan.io/` : "https://etherscan.io/"
   const CONTRACT_ADDRESS = process.env.REACT_APP_ACCOUNTABLE_CHANGE_CONTRACT_ADDRESS
   const eventName = "ChangeSubmitted"
+  
   const accountDictionary = {
     "0x372C68C90f433C54c4AE06b4Ddf107ce8baB67Cc": "LKPP",
     "0xF1E4cc03796c2d37d502CC484E3b67fB9Bf4E479": "Vendor 001",
