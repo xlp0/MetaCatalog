@@ -10,7 +10,20 @@ const PublishedEvents = () => {
   const ETHERSCAN_PREFIX = "https://goerli.etherscan.io/address/"
   const CONTRACT_ADDRESS = process.env.REACT_APP_ACCOUNTABLE_CHANGE_CONTRACT_ADDRESS
   const eventName = "ChangeSubmitted"
-  
+  const accountDictionary = {
+    "0x372C68C90f433C54c4AE06b4Ddf107ce8baB67Cc": "LKPP",
+    "0xF1E4cc03796c2d37d502CC484E3b67fB9Bf4E479": "Vendor 001",
+    "0x1c117Eb98169f2a81A17e18C07bD5ca44ee56411": "Finance Department",
+    "0xDd83c5776c274e78bD55Db135AA43210e838F5c8": "Transportation Department",
+  }
+
+  function nameLookup( str) {
+    if (accountDictionary[str]){
+      return accountDictionary[str]
+    }
+    return str
+  }
+
   const [provider, setProvider] = useState(null);
   const [events, setEvents] = useState([]);
   const [tableData, setTableData] = useState([]);
@@ -93,7 +106,7 @@ const PublishedEvents = () => {
           <th>Change Submission Account </th><th>   Change Instruction</th>
         {tableData.map( (entry) => (
         <tr>
-          <td><Link to={`${ETHERSCAN_PREFIX}${entry?.proposer}`} target="_blank" rel="noopener noreferrer">{entry?.proposer}</Link></td>
+          <td><Link to={`${ETHERSCAN_PREFIX}${entry?.proposer}`} target="_blank" rel="noopener noreferrer">{nameLookup(entry?.proposer)}</Link></td>
           <td>{entry?.data}</td>
         </tr>))}
         </table>
