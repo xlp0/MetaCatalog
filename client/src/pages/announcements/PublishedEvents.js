@@ -27,7 +27,7 @@ const PublishedEvents = () => {
 
   const queryFilterWithInfura = async () => {
     const aProvider = new ethers.providers.InfuraProvider("goerli", process.env.REACT_APP_INFURA_PROJECT_ID);
-    setProvider(aProvider);
+    setProvider(aProvider);ß
     setProviderName("Infura:" + aProvider.connection.url);
 
     let currentBlkNum = await aProvider.getBlockNumber();
