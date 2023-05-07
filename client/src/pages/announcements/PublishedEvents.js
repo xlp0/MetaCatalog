@@ -81,9 +81,25 @@ const PublishedEvents = () => {
     const contract = await new ethers.Contract(CONTRACT_ADDRESS, AC_ABI, aProvider)
 
     const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
-    console.log("fetchedEvents:" + JSON.stringify(fetchedEvents))
+    await insertTimeStampForBlocksInFetchedEvents(events)
     setEvents(fetchedEvents.reverse())
   }
+
+  const insertTimeStampForBlocksInFetchedEvents =async ( events ) => {
+    console.log(`Hello Events ${JSON.stringify(events)}`);
+
+    events.forEach((event) => {
+      const blockNumber = event.blockNumber;
+      provider.getBlock(blockNumber).then((block) => {
+        const timestamp = block.timestamp;
+        const aNewDate = new Date(timestamp * 1000)
+        event.timestamp = aNewDate
+        console.log(`Event occurred at ${event.timestamp}`);
+      })
+    })
+  }
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,7 +108,9 @@ const PublishedEvents = () => {
           const proposer =  event.args.sender
           const data =  event.args.data
           const blockNumber = event?.blockNumber
-          return { proposer, data , blockNumber};
+          const timestamp = event?.timestamp
+
+          return { proposer, data , blockNumber, timestamp};
         })
       );
       setTableData(rows);
@@ -113,7 +131,7 @@ const PublishedEvents = () => {
         <p>Event List Table</p>
         <p>From {providerName}</p>
         <table>
-        <th>Time: ( Larger number is later)</th> <th>Change Submission Account </th><th>   Change Instruction</th>
+        <th>Block Number</th> <th>Change Submission Account </th><th>   Change Instruction</th>
         {tableData.map( (entry) => (
           <tbody key={crypto.randomUUID()}>
           <tr key={crypto.randomUUID()}>
