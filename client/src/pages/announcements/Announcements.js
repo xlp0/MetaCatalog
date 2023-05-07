@@ -29,6 +29,17 @@ const Announcements = () => {
     }
     return str
   }
+
+  function shortenedAccountString( str ) {
+    if (str.length < 20){
+      return str
+    }else{
+      let firstPart = str.slice(0,10)
+      let lastPart = str.slice(-10)
+      return firstPart+ "..." + lastPart
+    }
+  }
+
   const queryFilterWithInfura = async () => {
     const aProvider = new ethers.providers.InfuraProvider("goerli", process.env.REACT_APP_INFURA_PROJECT_ID);
     setProvider(aProvider);
@@ -105,8 +116,8 @@ const Announcements = () => {
           <th> Account with Authority Change </th><th>   Agency represented by the Account   </th><th>   Status  </th>
         {tableData.map( (entry) => (
         <tr>
-          <td><Link to={`${ETHERSCAN_PREFIX}${entry?.changedAccount}`} target="_blank" rel="noopener noreferrer">{entry?.changedAccount}</Link></td>
-          <td>{nameLookup(entry?.changedAccount)}</td>
+          <td><Link to={`${ETHERSCAN_PREFIX}${entry?.changedAccount}`} target="_blank" rel="noopener noreferrer">{shortenedAccountString(entry?.changedAccount)}</Link></td>
+          <td>{shortenedAccountString(nameLookup(entry?.changedAccount))}</td>
           <td>{entry?.data ? "YES" : "NO" }</td>
         </tr>))}
         </table>
