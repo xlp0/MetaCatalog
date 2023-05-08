@@ -645,3 +645,8 @@ h3 {
 }
 
 
+.IPFS_LINK{
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+}

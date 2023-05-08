@@ -8,6 +8,12 @@ export const imageList = ( originalStr ) => {
     return aList;
 }
 
+export const convertToIPFS = (inputStr) => {
+    const prefixStr = process.env.REACT_APP_IPFS_IMAGEFILES_LOCAL_ADDRESS
+    const parts = inputStr.split("/");
+    return prefixStr + parts.pop() + ".png"
+}
+
 export const priceString = (aNumber) => {
     const options = { style: 'decimal', minimumFractionDigits: 0 };
     if (typeof aNumber !== "number"){

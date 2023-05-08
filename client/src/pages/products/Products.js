@@ -38,9 +38,11 @@ export const productsLoader = async () => {
   console.log("productsLoader running")
 
   try {
-    const res = productList
-    return res
-    
+    // Fetch data from URL
+    const response = await fetch(`https://ipfs.io/ipfs/${process.env.REACT_APP_IPFS_CID}?filename=${process.env.REACT_APP_IPFS_FILENAME}`)
+    const laptops = await response.json()      // Flatten data
+    const flattenedLaptops = laptops.map((laptop) => {return laptop?.data;})
+    return flattenedLaptops;
   } catch (err) {
     console.error(err)
   }

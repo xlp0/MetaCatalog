@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useLoaderData } from 'react-router-dom'
-import { imageList, theImage, priceString } from '../../hooks/formatters'
+import { imageList, theImage, priceString, convertToIPFS } from '../../hooks/formatters'
 import WalletConnection from '../../components/WalletConnection'
 
 const productList = require("./" + process.env.REACT_APP_SAMPLE_DATA_IN_PUBLIC_DIR)
@@ -13,7 +13,7 @@ const ProductDetails = () => {
     <div className ="product-details">
         <div className="topRow">
             <div>
-                <img src={theImage(product?.produk_gambar)} alt={theImage(product?.produk_gambar)} className="product-details_image" ></img>
+                <img src={convertToIPFS(theImage(product?.produk_gambar))} alt={convertToIPFS(theImage(product?.produk_gambar))} className="product-details_image" ></img>
             </div>
 
             <div>
@@ -26,7 +26,7 @@ const ProductDetails = () => {
         </div>
         <div className="image_row">
                 {imageList(product?.produk_gambar)
-                ?.map( anImg => (<img src={anImg} alt={anImg} className="product-details_image" ></img>)
+                ?.map( anImg => (<img src={convertToIPFS(anImg)} alt={convertToIPFS(anImg)} className="product-details_image" ></img>)
                 )}
         </div>
 
