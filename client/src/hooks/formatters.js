@@ -14,7 +14,7 @@ export const convertToIPFS = (inputStr) => {
         return null
     }
     const parts = inputStr.split("/");
-    return prefixStr + parts.pop() + ".png"
+    return prefixStr + parts.pop().trim() + ".png"
 }
 
 export const priceString = (aNumber) => {
