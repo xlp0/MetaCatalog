@@ -11,7 +11,7 @@ export const imageList = ( originalStr ) => {
 export const convertToIPFS = (inputStr) => {
     const prefixStr = process.env.REACT_APP_IPFS_IMAGEFILES_LOCAL_ADDRESS
     const parts = inputStr.split("/");
-    return prefixStr + parts.pop() + ".png"
+    return prefixStr + parts.pop().trim() + ".png"
 }
 
 export const priceString = (aNumber) => {
