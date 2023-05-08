@@ -10,6 +10,9 @@ export const imageList = ( originalStr ) => {
 
 export const convertToIPFS = (inputStr) => {
     const prefixStr = process.env.REACT_APP_IPFS_IMAGEFILES_LOCAL_ADDRESS
+    if (inputStr === undefined){
+        return null
+    }
     const parts = inputStr.split("/");
     return prefixStr + parts.pop() + ".png"
 }

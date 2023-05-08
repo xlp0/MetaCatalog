@@ -1,5 +1,5 @@
 import { useLoaderData, Link } from "react-router-dom";
-import { theImage, priceString } from '../../hooks/formatters'
+import { theImage, priceString, convertToIPFS } from '../../hooks/formatters'
 import { useState } from 'react'
 
 const productList = require("./" +process.env.REACT_APP_SAMPLE_DATA_IN_PUBLIC_DIR)
@@ -21,7 +21,7 @@ const Products = () => {
 
         {products?.map(product => (
             <Link to={product?.no_produk?.toString()} key={product?.no_produk}>
-                <p><img className="product_avatar" src={theImage(product?.produk_gambar)} alt={theImage(product?.produk_gambar)} ></img>
+                <p><img className="product_avatar" src={convertToIPFS(theImage(product?.produk_gambar))} alt={convertToIPFS(theImage(product?.produk_gambar))} ></img>
                   {product?.nama_produk}, Made by: {product?.nama_manufaktur}</p>
                 <p>TKDN(%):{product?.tkdn_produk === null ? "0.0": product?.tkdn_produk} </p>
                 <p>Price: RP {priceString(product?.harga_pemerintah)}</p>
