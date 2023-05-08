@@ -12,7 +12,7 @@ const Home = () => {
       <ShowCaseBanner />
       <div className="IPFS_LINK">
         <Link to={`http://ipfs.io/ipfs/${process.env.REACT_APP_IPFS_CID}?filename=OriginalLaptopData.json`} target="OTHERPAGE" rel="noopener noreferrer">To original data On IPFS</Link>
-        <Link to={`${process.env.REACT_APP_IPFS_IMAGEFILES_LOCAL_ADDRESS}`} target="OTHERPAGE" rel="noopener noreferrer">To original image files On IPFS</Link>
+        <Link to={`${process.env.REACT_APP_IPFS_IMAGEFILES_GLOBAL_ADDRESS}`} target="OTHERPAGE" rel="noopener noreferrer">To original image files On IPFS</Link>
       </div>
     </div>
   )
