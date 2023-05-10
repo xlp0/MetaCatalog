@@ -5,9 +5,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import {selectAllProducts} from '../../features/products/productSlice'
 import  {selectItem} from '../../features/items/itemSlice'
 import { store } from '../../app/store';
-import { createStore } from 'redux'
-import { composeWithDevTools } from 'redux-devtools-extension'
-
 
 
 const ProductDetails = () => {
