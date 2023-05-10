@@ -12,10 +12,7 @@ export const itemSlice = createSlice({
   initialState,
   reducers: {
     selectItem : (state, action) => {
-        console.log("itemSlice's selectItem has been fired :" + JSON.stringify(action.payload) )
         state.item = action.payload;
-        console.log("itemSlice's state.item after assignment :" + JSON.stringify(state.item) )
-
     }
   }
 })

@@ -4,7 +4,6 @@ import WalletConnection from '../../components/WalletConnection'
 import { useSelector, useDispatch } from 'react-redux'
 import {selectAllProducts} from '../../features/products/productSlice'
 import  {selectItem} from '../../features/items/itemSlice'
-import { store } from '../../app/store';
 
 
 const ProductDetails = () => {
@@ -15,11 +14,9 @@ const ProductDetails = () => {
 
    const product = productList.find(product => product?.no_produk === id);
 
+   // Must dispatch the selectItem(product) function to make sure that the global state is set to this selectedItem.
    const dispatch = useDispatch();
    dispatch(selectItem(product));
-   const selectedProduct = store.someItem
-   console.log("Right After CALLING DISPATCH..." + JSON.stringify(selectedProduct));
-   console.dir(store)
 
 
   return (
