@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/xlp0/MetaCatalog#readme",
   "dependencies": {
-    "concurrently": "^8.0.1"
+    "concurrently": "^8.0.1",
+    "redux-devtools-extension": "^2.13.9"
   }
 }
