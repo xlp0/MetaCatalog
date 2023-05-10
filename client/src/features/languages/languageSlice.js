@@ -9,7 +9,7 @@ const initialState = {
   message: '',
 }
 
-// get instructions
+// get languages
 export const getLanguages = createAsyncThunk(
   'languages/get',
   async (thunkAPI) => {
@@ -28,7 +28,7 @@ export const getLanguages = createAsyncThunk(
 )
 
 export const languageSlice = createSlice({
-  name: 'language',
+  name: 'languages',
   initialState,
   reducers: {
     reset: (state) => initialState,

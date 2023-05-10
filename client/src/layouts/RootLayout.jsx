@@ -7,30 +7,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import { getLanguages } from '../features/languages/languageSlice'
 
 const RootLayout = ( knownLanguages ) => {
-  const [languages, setLanguages] = useState([]);
   const [hasSearchResult, setHasSearchResult] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch()
-  const { availableLanguages, isLoading } = useSelector(
+  const { languages, isLoading } = useSelector(
     (state) => state.languages
   )
-  
-  useEffect(() => {    
-    const sendDispatch = async () => {
-      await dispatch(getLanguages())
-    }
-    sendDispatch();
-  }, []);
 
-  useEffect(() => {
-    if (!isLoading && !(availableLanguages === undefined) && availableLanguages.length > 0) {
-      setLanguages(availableLanguages)
-      console.log(availableLanguages)
-    }else if (isLoading){
-      console.log("LANGUAGE SERVICE IS LOADING...")
-    }
-  }, [availableLanguages, isLoading])
 
   const search = (e) => {
     e.preventDefault();
@@ -44,7 +28,7 @@ const RootLayout = ( knownLanguages ) => {
         <header className="main-header-wrapper">
           <div className="helper-menu">
         <div className="container-fluid">
-          <LanguageIconList languages={availableLanguages}/>
+          <LanguageIconList languages={languages}/>
         </div>
         </div>
 

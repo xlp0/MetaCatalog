@@ -1,12 +1,29 @@
-import { NavLink, Outlet, useLoaderData } from 'react-router-dom'
+import { NavLink, Outlet, useLoaderData, useParams } from 'react-router-dom'
 import { imageList, theImage, priceString, convertToIPFS } from '../../hooks/formatters'
 import WalletConnection from '../../components/WalletConnection'
+import { useSelector, useDispatch } from 'react-redux'
+import {selectAllProducts} from '../../features/products/productSlice'
+import  {selectItem} from '../../features/items/itemSlice'
+import { store } from '../../app/store';
+import { createStore } from 'redux'
+import { composeWithDevTools } from 'redux-devtools-extension'
 
-const productList = require("./" + process.env.REACT_APP_SAMPLE_DATA_IN_PUBLIC_DIR)
+
 
 const ProductDetails = () => {
 
-   const product = useLoaderData()
+   const productList = useSelector(selectAllProducts);
+   
+   const { id } = useParams();
+
+   const product = productList.find(product => product?.no_produk === id);
+
+   const dispatch = useDispatch();
+   dispatch(selectItem(product));
+   const selectedProduct = store.someItem
+   console.log("Right After CALLING DISPATCH..." + JSON.stringify(selectedProduct));
+   console.dir(store)
+
 
   return (
     <>
@@ -54,11 +71,3 @@ const ProductDetails = () => {
 }
 
 export default ProductDetails
-
-// loader functions
-export const productDetailsLoader = async ( {params} ) => {
-    const { id } = params
-    const product = productList.find(product => product.no_produk === id);
-    console.log("id passed in:" + id)
-    return product
-}

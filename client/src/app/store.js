@@ -4,9 +4,7 @@ import eventReducer from '../features/events/eventSlice'
 import instructionReducer from '../features/instructions/instructionSlice'
 import productReducer from '../features/products/productSlice'
 import languageReducer from '../features/languages/languageSlice'
-
-
-
+import itemReducer from '../features/items/itemSlice'
 
 export const store = configureStore({
   reducer: {
@@ -14,7 +12,8 @@ export const store = configureStore({
     events: eventReducer,
     instructions: instructionReducer,
     languages: languageReducer,
-    productReducer: productReducer
+    products: productReducer,
+    items:itemReducer
   }
    
 })

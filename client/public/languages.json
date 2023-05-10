@@ -1,23 +1,15 @@
 [
     {
-        "code": "en",
-        "name": "English"
-    },
-    {
         "code": "id",
         "name": "Indonesian"
     },
     {
+        "code": "en",
+        "name": "English"
+    },
+    {
         "code": "us",
         "name": "United States"
-    },
-    {
-        "code": "jp",
-        "name": "Japanese"
-    },
-    {
-        "code": "pl",
-        "name": "Poland"
     },
     {
         "code": "tw",

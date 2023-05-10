@@ -53,13 +53,12 @@ const router = createBrowserRouter(
           <Route 
             index 
             element={<Products />} 
-            loader={productsLoader}
-            
+            // loader={productsLoader}
           />
           <Route
             path=":id"
             element={<ProductDetails />} 
-            loader={productDetailsLoader}>
+            >
               <Route path="specification" element={<Specification />} />
               <Route path="announcements" element={<Announcements />} />
               <Route path="published_events"  element={<PublishedEvents />}/>

@@ -1,22 +1,18 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
-function LanguageIconList({ languages }) {
 
-  const { user } = useSelector((state) => state.auth)
-  const { languageList, isLoading, isError, message } = useSelector(
-    (state) => state.languages
-  )
+
+function LanguageIconList({ languages }) {
 
 
   if (languages === undefined){
     languages = [
       {
-          "code": "en",
-          "name": "English"
+        "code": "id",
+        "name": "Indonesian"
       },
       {
-          "code": "id",
-          "name": "Indonesian"
+          "code": "en",
+          "name": "English"
       }
   ]
   }

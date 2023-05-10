@@ -1,17 +1,16 @@
-import { useLoaderData, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { theImage, priceString, convertToIPFS } from '../../hooks/formatters'
 import { useState } from 'react'
-
-const productList = require("./" +process.env.REACT_APP_SAMPLE_DATA_IN_PUBLIC_DIR)
-
+import { useSelector } from "react-redux";
+import {selectAllProducts} from '../../features/products/productSlice'
 
 const Products = () => {
     
     const [productNumber, setProductNumber] = useState('');
 
-    const allProducts = useLoaderData();
+    const productList = useSelector(selectAllProducts);
     
-    const products = allProducts.filter( item => item?.no_produk?.toLowerCase().includes(productNumber));
+    const products = productList?.filter( item => item?.no_produk?.toLowerCase().includes(productNumber));
 
   return (
     <div className="products">
@@ -33,19 +32,19 @@ const Products = () => {
 
 export default Products
 
-export const productsLoader = async () => {
+// export const productsLoader = async () => {
 
-  console.log("productsLoader running")
+//   console.log("productsLoader running in Products.js")
 
-  try {
-    // Fetch data from URL
-    const response = await fetch(`https://ipfs.io/ipfs/${process.env.REACT_APP_IPFS_CID}?filename=${process.env.REACT_APP_IPFS_FILENAME}`)
-    const laptops = await response.json()      // Flatten data
-    const flattenedLaptops = laptops.map((laptop) => {return laptop?.data;})
-    return flattenedLaptops;
-  } catch (err) {
-    console.error(err)
-  }
-  return null
-}
+//   try {
+//     // Fetch data from URL
+//     const response = await fetch(`https://ipfs.io/ipfs/${process.env.REACT_APP_IPFS_CID}?filename=${process.env.REACT_APP_IPFS_FILENAME}`)
+//     const laptops = await response.json()      // Flatten data
+//     const flattenedLaptops = laptops.map((laptop) => {return laptop?.data;})
+//     return flattenedLaptops;
+//   } catch (err) {
+//     console.error(err)
+//   }
+//   return null
+// }
 
