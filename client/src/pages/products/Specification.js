@@ -1,7 +1,7 @@
 import { useState } from "react";
 import KeyValueList from "../../components/KeyValueList";
 import { useSelector } from "react-redux";
-import {someItem} from '../../features/items/itemSlice'
+import {selectedItem} from '../../features/items/itemSlice'
   
 
 
@@ -12,7 +12,7 @@ const Specification = () => {
   const [ productID, setProductID ] = useState(null);
   const [product, setProduct] = useState(null)
   
-  const theSelectedItem = useSelector(someItem);
+  const theSelectedItem = useSelector(selectedItem);
 
   return (
     <div>

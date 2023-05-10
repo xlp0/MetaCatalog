@@ -22,4 +22,4 @@ export const itemSlice = createSlice({
 
 export default itemSlice.reducer
 export const { selectItem } = itemSlice.actions;
-export const someItem = (state) => state.item;
+export const selectedItem = (state) => state.items.item;
