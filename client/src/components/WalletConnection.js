@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import {ethers} from 'ethers'
 import AC_ABI from '../features/blockchain/AccountableChange_abi.json'
 import {Link} from 'react-router-dom'
+import { useSelector } from "react-redux";
+import { selectedItem } from '../features/items/itemSlice'
 
 const WalletConnection = () => {
 
@@ -22,6 +24,8 @@ const WalletConnection = () => {
   const WALLET_CONNECTED_TEXT = "Wallet Connected"
 
   const [value, setValue] = useState('');
+
+  const theSelectedItem = useSelector(selectedItem);
 
   const handleChange = (event) => {
     const regex = /^[1-9]\d*$/; // positive integer regex
@@ -105,7 +109,7 @@ const WalletConnection = () => {
 
   const submitValueToContract = (e) => {
     e.preventDefault();
-    const valueToBeSent = { no_produk: "4522100001-PEP-001442670", price: value}
+    const valueToBeSent = { no_produk:theSelectedItem?.no_produk, price: value}
     let strValue = JSON.stringify(valueToBeSent)
 
     contract.submitChange(strValue);  

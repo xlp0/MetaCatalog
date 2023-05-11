@@ -29,7 +29,7 @@ const ProductDetails = () => {
 
             <div>
                 <h2>{product?.nama_produk}</h2>  
-                <p> Product No.:{product?.no_produk}</p>      
+                <p>Product No.:{product?.no_produk}</p>      
                 <p>Price: RP {priceString(product?.harga_pemerintah)}</p>    
                 <p>Total Stock: {product?.jumlah_stok}</p>    
             </div>

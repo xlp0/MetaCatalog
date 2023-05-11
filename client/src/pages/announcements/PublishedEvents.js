@@ -12,13 +12,6 @@ const PublishedEvents = () => {
   const ETHERSCAN_PREFIX = `${ETHER_NETWORK}` ? `https://${ETHER_NETWORK}.etherscan.io/` : "https://etherscan.io/"
   const CONTRACT_ADDRESS = process.env.REACT_APP_ACCOUNTABLE_CHANGE_CONTRACT_ADDRESS
   const eventName = "ChangeSubmitted"
-  
-  const accountDictionary = {
-    "0x372C68C90f433C54c4AE06b4Ddf107ce8baB67Cc": "LKPP",
-    "0xF1E4cc03796c2d37d502CC484E3b67fB9Bf4E479": "Vendor 001",
-    "0x1c117Eb98169f2a81A17e18C07bD5ca44ee56411": "Finance Department",
-    "0xDd83c5776c274e78bD55Db135AA43210e838F5c8": "Transportation Department",
-  }
 
   const [provider, setProvider] = useState(null);
   const [events, setEvents] = useState([]);
@@ -88,23 +81,9 @@ const PublishedEvents = () => {
     const contract = await new ethers.Contract(CONTRACT_ADDRESS, AC_ABI, aProvider)
 
     const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
-    await insertTimeStampForBlocksInFetchedEvents(events)
-    setEvents(fetchedEvents.reverse())
+    setEvents(fetchedEvents)
   }
 
-  const insertTimeStampForBlocksInFetchedEvents =async ( events ) => {
-    console.log(`Hello Events ${JSON.stringify(events)}`);
-
-    events.forEach((event) => {
-      const blockNumber = event.blockNumber;
-      provider.getBlock(blockNumber).then((block) => {
-        const timestamp = block.timestamp;
-        const aNewDate = new Date(timestamp * 1000)
-        event.timestamp = aNewDate
-        console.log(`Event occurred at ${event.timestamp}`);
-      })
-    })
-  }
 
 
 
@@ -115,12 +94,11 @@ const PublishedEvents = () => {
           const proposer =  event.args.sender
           const data =  event.args.data
           const blockNumber = event?.blockNumber
-          const timestamp = event?.timestamp
 
-          return { proposer, data , blockNumber, timestamp};
+          return { proposer, data , blockNumber};
         })
       );
-      setTableData(rows);
+      setTableData(rows.sort((b, a) => a?.blockNumber - b?.blockNumber));
     };
     fetchData()
     console.log("Selected Provider: " + JSON.stringify(provider))
