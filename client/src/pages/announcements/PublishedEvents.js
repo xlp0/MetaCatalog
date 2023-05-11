@@ -5,6 +5,9 @@ import {ethers} from 'ethers'
 import AC_ABI from '../../features/blockchain/AccountableChange_abi.json'
 import { useEffect, useState } from 'react';
 import {Link} from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { nameLookup } from '../../features/blockchain/eoaDictionary/eoaDictionarySlice'
+
 
 const PublishedEvents = () => {
   
@@ -18,6 +21,7 @@ const PublishedEvents = () => {
   const [tableData, setTableData] = useState([]);
   const [providerName, setProviderName] = useState("No Provider")
 
+  const lookupFunction =  useSelector(nameLookup);
 
   const queryFilterWithInfura = async () => {
     const aProvider = new ethers.providers.InfuraProvider("goerli", process.env.REACT_APP_INFURA_PROJECT_ID);
@@ -121,7 +125,7 @@ const PublishedEvents = () => {
           <tbody key={crypto.randomUUID()}>
           <tr key={crypto.randomUUID()}>
             <td><Link to={`${ETHERSCAN_PREFIX}/block/${entry?.blockNumber}`} target="_blank" rel="noopener noreferrer">{entry?.blockNumber}</Link></td>
-            <td><Link to={`${ETHERSCAN_PREFIX}/address/${entry?.proposer}`} target="_blank" rel="noopener noreferrer">{entry?.proposer}</Link></td>
+            <td><Link to={`${ETHERSCAN_PREFIX}/address/${entry?.proposer}`} target="_blank" rel="noopener noreferrer">{lookupFunction(entry?.proposer)}</Link></td>
             <td>{entry?.data}</td>
           </tr>
           </tbody>))}

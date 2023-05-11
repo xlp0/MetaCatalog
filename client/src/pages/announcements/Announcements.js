@@ -4,6 +4,8 @@ import {ethers} from 'ethers'
 import AC_ABI from '../../features/blockchain/AccountableChange_abi.json'
 import { useEffect, useState } from 'react';
 import {Link} from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { nameLookup } from '../../features/blockchain/eoaDictionary/eoaDictionarySlice'
 
 const Announcements = () => {
   
@@ -16,22 +18,10 @@ const Announcements = () => {
   const [events, setEvents] = useState([]);
   const [tableData, setTableData] = useState([]);
   const [providerName, setProviderName] = useState("No Provider")
+  const lookupFunction = useSelector(nameLookup);
 
-  const accountDictionary = {
-    "0x372C68C90f433C54c4AE06b4Ddf107ce8baB67Cc": "LKPP",
-    "0xF1E4cc03796c2d37d502CC484E3b67fB9Bf4E479": "Vendor 001",
-    "0x1c117Eb98169f2a81A17e18C07bD5ca44ee56411": "Finance Department",
-    "0xDd83c5776c274e78bD55Db135AA43210e838F5c8": "Transportation Department",
-  }
-
-  function nameLookup( str) {
-    if (accountDictionary[str]){
-      return accountDictionary[str]
-    }
-    return str
-  }
-
-  function shortenedAccountString( str ) {
+  function shortenedAccountString( theString ) {
+    let str = String(theString)
     if (str.length < 20){
       return str
     }else{
@@ -118,7 +108,7 @@ const Announcements = () => {
         <tr>
           <td><Link to={`${ETHERSCAN_PREFIX}/block/${entry?.blockNumber}`} target="_blank" rel="noopener noreferrer">{entry?.blockNumber}</Link></td>
           <td><Link to={`${ETHERSCAN_PREFIX}/address/${entry?.changedAccount}`} target="_blank" rel="noopener noreferrer">{shortenedAccountString(entry?.changedAccount)}</Link></td>
-          <td>{shortenedAccountString(nameLookup(entry?.changedAccount))}</td>
+          <td>{shortenedAccountString(lookupFunction([entry?.changedAccount]))}</td>
           <td>{entry?.data ? "YES" : "NO" }</td>
         </tr>))}
         </table>

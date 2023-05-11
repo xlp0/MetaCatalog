@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useLoaderData, useParams } from 'react-router-dom'
+import { NavLink, Outlet, useParams } from 'react-router-dom'
 import { imageList, theImage, priceString, convertToIPFS } from '../../hooks/formatters'
 import WalletConnection from '../../components/WalletConnection'
 import { useSelector, useDispatch } from 'react-redux'

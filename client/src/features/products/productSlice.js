@@ -1,8 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import productService from './productService'
-
-// Get product from localStorage
-const product = JSON.parse(localStorage.getItem('product'))
 
 
 
@@ -24,9 +20,6 @@ export const fetchOriginalProducts = createAsyncThunk('products/fetchOriginalPro
   return null
 })
 
-
-
-
  const productSlice = createSlice({
   name: 'products',
   initialState,
@@ -38,7 +31,6 @@ export const fetchOriginalProducts = createAsyncThunk('products/fetchOriginalPro
   }
 })
 
-export const { reset } = productSlice.actions
 export const selectAllProducts = (state) => state.products;
 
 export default productSlice.reducer
