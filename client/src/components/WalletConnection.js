@@ -20,7 +20,7 @@ const WalletConnection = () => {
   const [currentContractVal, setCurrentContractVal] = useState(WIP_INDICATOR_STRING);
 
   const contractAddress = process.env.REACT_APP_ACCOUNTABLE_CHANGE_CONTRACT_ADDRESS;
-  const eventName = "ChangeSubmitted"
+  const EVENT_NAME = "ChangeSubmitted"
   const WALLET_CONNECTED_TEXT = "Wallet Connected"
 
   const [value, setValue] = useState('');
@@ -44,14 +44,14 @@ const WalletConnection = () => {
                       contractAddress, 
                       AC_ABI, 
                       signer);
-                      listeningContract.on(eventName, (eventOutput) => {
-                        let res = {
-                          eventOutput
-                        }
-                        setIsLoading(false)
-                        fetchValueFromEthereum()
-                        console.log("DATA FROM EVENT:" + JSON.stringify(res))
-                      })
+    listeningContract.on(EVENT_NAME, (eventOutput) => {
+      let res = {
+        eventOutput
+      }
+      setIsLoading(false)
+      fetchValueFromEthereum()
+      console.log("DATA FROM EVENT:" + JSON.stringify(res))
+    })
   }
 
 
@@ -99,7 +99,7 @@ const WalletConnection = () => {
   const fetchValueFromEthereum = async () => {
     setCurrentContractVal(WIP_INDICATOR_STRING);
     let currentBlkNum = await provider.getBlockNumber();
-    const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
+    const fetchedEvents = await contract.queryFilter(EVENT_NAME, 0, currentBlkNum);
     const latestEvent = fetchedEvents.pop();
     let val = latestEvent.args.sender + ":" + latestEvent.args.data;
     console.log("fecthValueFromEthereum called:" + val)

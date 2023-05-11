@@ -7,7 +7,8 @@ import {Link} from 'react-router-dom'
 
 const Announcements = () => {
   
-  const ETHERSCAN_PREFIX = "https://goerli.etherscan.io/address/"
+  const ETHER_NETWORK = process.env.REACT_APP_ETHEREUM_NETWORK
+  const ETHERSCAN_PREFIX = `${ETHER_NETWORK}` ? `https://${ETHER_NETWORK}.etherscan.io/` : "https://etherscan.io/"
   const CONTRACT_ADDRESS = process.env.REACT_APP_ACCOUNTABLE_CHANGE_CONTRACT_ADDRESS
   const eventName = "AuthorizationChanged"
   
@@ -81,9 +82,7 @@ const Announcements = () => {
     const contract = await new ethers.Contract(CONTRACT_ADDRESS, AC_ABI, aProvider)
 
     const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
-    const oneEvent = fetchedEvents[0];
-    console.log("blockTimestamp:" + oneEvent.blockTimestamp)
-    setEvents(fetchedEvents.reverse())
+    setEvents(fetchedEvents)
   }
 
   useEffect(() => {
@@ -92,10 +91,11 @@ const Announcements = () => {
         events.map(async (event) => {
           const changedAccount =  event.args.account;
           const data =  event.args.authorized;
-          return { changedAccount, data };
+          const blockNumber = event?.blockNumber
+          return { changedAccount, data, blockNumber };
         })
       );
-      setTableData(rows);
+      setTableData(rows.sort((b, a) => a?.blockNumber - b?.blockNumber));
     };
     fetchData()
     console.log("Selected Provider: " + JSON.stringify(provider))
@@ -113,10 +113,11 @@ const Announcements = () => {
         <p>Event List Table</p>
         <p>From {providerName}</p>
         <table>
-          <th> Account with Authority Change </th><th>   Agency represented by the Account   </th><th>   Status  </th>
+        <th> Block Number </th><th> Account with Authority Change </th><th>   Agency represented by the Account   </th><th>   Status  </th>
         {tableData.map( (entry) => (
         <tr>
-          <td><Link to={`${ETHERSCAN_PREFIX}${entry?.changedAccount}`} target="_blank" rel="noopener noreferrer">{shortenedAccountString(entry?.changedAccount)}</Link></td>
+          <td><Link to={`${ETHERSCAN_PREFIX}/block/${entry?.blockNumber}`} target="_blank" rel="noopener noreferrer">{entry?.blockNumber}</Link></td>
+          <td><Link to={`${ETHERSCAN_PREFIX}/address/${entry?.changedAccount}`} target="_blank" rel="noopener noreferrer">{shortenedAccountString(entry?.changedAccount)}</Link></td>
           <td>{shortenedAccountString(nameLookup(entry?.changedAccount))}</td>
           <td>{entry?.data ? "YES" : "NO" }</td>
         </tr>))}
