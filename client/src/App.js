@@ -25,9 +25,11 @@ import Products, { productsLoader } from './pages/products/Products';
 import ProductDetails, { productDetailsLoader } from './pages/products/ProductDetails';
 import AnnouncementsLayout from './layouts/AnnouncementsLayout'
 import Announcements from './pages/announcements/Announcements';
-import News from './pages/news/News';
+import PrefetchedEvents from './pages/announcements/PrefetchedEvents';
+
 import PublishedEvents from './pages/announcements/PublishedEvents';
 import Specification from './pages/products/Specification';
+import News from './pages/news/News';
 
 
 const router = createBrowserRouter(
@@ -45,6 +47,7 @@ const router = createBrowserRouter(
         </Route>
         <Route path="announcement" element={<AnnouncementsLayout />} >
             <Route path="announcements" element={<Announcements />} />
+            <Route path="prefeched" element={<PrefetchedEvents />} />
             <Route path="published_events"  element={<PublishedEvents />}/>
         </Route>
         <Route path="news" element={<News />} />

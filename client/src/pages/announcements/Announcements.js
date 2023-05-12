@@ -3,14 +3,14 @@ import {ethers} from 'ethers'
 // import SS_ABI from '../../features/blockchain/SimpleStore_abi.json'
 import AC_ABI from '../../features/blockchain/AccountableChange_abi.json'
 import { useEffect, useState } from 'react';
-import {Link} from 'react-router-dom'
+import EtherscanLink from '../../components/EtherscanLink';
 import { useSelector } from 'react-redux'
 import { nameLookup } from '../../features/blockchain/eoaDictionary/eoaDictionarySlice'
+import { shortenedAccountString } from '../../hooks/formatters'
 
 const Announcements = () => {
   
   const ETHER_NETWORK = process.env.REACT_APP_ETHEREUM_NETWORK
-  const ETHERSCAN_PREFIX = `${ETHER_NETWORK}` ? `https://${ETHER_NETWORK}.etherscan.io/` : "https://etherscan.io/"
   const CONTRACT_ADDRESS = process.env.REACT_APP_ACCOUNTABLE_CHANGE_CONTRACT_ADDRESS
   const eventName = "AuthorizationChanged"
   
@@ -19,17 +19,6 @@ const Announcements = () => {
   const [tableData, setTableData] = useState([]);
   const [providerName, setProviderName] = useState("No Provider")
   const lookupFunction = useSelector(nameLookup);
-
-  function shortenedAccountString( theString ) {
-    let str = String(theString)
-    if (str.length < 20){
-      return str
-    }else{
-      let firstPart = str.slice(0,10)
-      let lastPart = str.slice(-10)
-      return firstPart+ "..." + lastPart
-    }
-  }
 
   const queryFilterWithInfura = async () => {
     const aProvider = new ethers.providers.InfuraProvider("goerli", process.env.REACT_APP_INFURA_PROJECT_ID);
@@ -106,8 +95,8 @@ const Announcements = () => {
         <th> Block Number </th><th> Account with Authority Change </th><th>   Agency represented by the Account   </th><th>   Status  </th>
         {tableData.map( (entry) => (
         <tr>
-          <td><Link to={`${ETHERSCAN_PREFIX}/block/${entry?.blockNumber}`} target="_blank" rel="noopener noreferrer">{entry?.blockNumber}</Link></td>
-          <td><Link to={`${ETHERSCAN_PREFIX}/address/${entry?.changedAccount}`} target="_blank" rel="noopener noreferrer">{shortenedAccountString(entry?.changedAccount)}</Link></td>
+          <td><EtherscanLink network={ETHER_NETWORK} assetType="block" address={entry?.blockNumber}/></td>
+          <td><EtherscanLink network={ETHER_NETWORK} assetType="address" address={entry?.changedAccount}/></td>
           <td>{shortenedAccountString(lookupFunction([entry?.changedAccount]))}</td>
           <td>{entry?.data ? "YES" : "NO" }</td>
         </tr>))}

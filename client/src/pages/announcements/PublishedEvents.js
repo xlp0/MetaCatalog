@@ -4,17 +4,16 @@ import {ethers} from 'ethers'
 // import SS_ABI from '../../features/blockchain/SimpleStore_abi.json'
 import AC_ABI from '../../features/blockchain/AccountableChange_abi.json'
 import { useEffect, useState } from 'react';
-import {Link} from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { nameLookup } from '../../features/blockchain/eoaDictionary/eoaDictionarySlice'
+import EtherscanLink from '../../components/EtherscanLink';
 
 
 const PublishedEvents = () => {
   
   const ETHER_NETWORK = process.env.REACT_APP_ETHEREUM_NETWORK
-  const ETHERSCAN_PREFIX = `${ETHER_NETWORK}` ? `https://${ETHER_NETWORK}.etherscan.io/` : "https://etherscan.io/"
   const CONTRACT_ADDRESS = process.env.REACT_APP_ACCOUNTABLE_CHANGE_CONTRACT_ADDRESS
-  const eventName = "ChangeSubmitted"
+  const EVENT_NAME = "ChangeSubmitted"
 
   const [provider, setProvider] = useState(null);
   const [events, setEvents] = useState([]);
@@ -24,7 +23,7 @@ const PublishedEvents = () => {
   const lookupFunction =  useSelector(nameLookup);
 
   const queryFilterWithInfura = async () => {
-    const aProvider = new ethers.providers.InfuraProvider("goerli", process.env.REACT_APP_INFURA_PROJECT_ID);
+    const aProvider = new ethers.providers.InfuraProvider(ETHER_NETWORK, process.env.REACT_APP_INFURA_PROJECT_ID);
     setProvider(aProvider);
     setProviderName("Infura:" + aProvider.connection.url);
 
@@ -33,12 +32,12 @@ const PublishedEvents = () => {
 
     const contract = await new ethers.Contract(CONTRACT_ADDRESS, AC_ABI, aProvider)
 
-    const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
+    const fetchedEvents = await contract.queryFilter(EVENT_NAME, 0, currentBlkNum);
     setEvents(fetchedEvents)
   }
 
   const queryFilterWithAlchemy = async () => {
-    const aProvider = new ethers.providers.AlchemyProvider("goerli", process.env.REACT_APP_ALCHEMY_KEY);
+    const aProvider = new ethers.providers.AlchemyProvider(ETHER_NETWORK, process.env.REACT_APP_ALCHEMY_KEY);
     setProvider(aProvider);
     setProviderName("Alchemy:" + aProvider.connection.url);
 
@@ -47,29 +46,29 @@ const PublishedEvents = () => {
 
     const contract = await new ethers.Contract(CONTRACT_ADDRESS, AC_ABI, aProvider)
 
-    const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
+    const fetchedEvents = await contract.queryFilter(EVENT_NAME, 0, currentBlkNum);
     setEvents(fetchedEvents)
   }
    
-  function getEventTypes(eventName) {
+  function getEventTypes(EVENT_NAME) {
 
-    const event = AC_ABI.find(item => item.type === 'event' && item.name === eventName);
+    const event = AC_ABI.find(item => item.type === 'event' && item.name === EVENT_NAME);
     if (!event) {
       console.log("No event found for event");
-      throw new Error(`Event ${eventName} not found in contract ABI`);
+      throw new Error(`Event ${EVENT_NAME} not found in contract ABI`);
     }
     const eventTypes = event.inputs.map(input => input.type);
     return eventTypes;
   }
 
   const queryFilterWithEtherscan = async () => {
-    const aProvider = new ethers.providers.EtherscanProvider("goerli", process.env.REACT_APP_ETHERSCAN_KEY);
+    const aProvider = new ethers.providers.EtherscanProvider(ETHER_NETWORK, process.env.REACT_APP_ETHERSCAN_KEY);
     setProvider(aProvider);
     setProviderName("Etherscan:" + aProvider.getBaseUrl());
-    const eventTypes = getEventTypes(eventName);
+    const eventTypes = getEventTypes(EVENT_NAME);
 
-    const eventInterface = new ethers.utils.Interface([`event ${eventName}(${eventTypes.join(',')})`]);
-    const eventSignature = eventInterface.getEventTopic(eventName);
+    const eventInterface = new ethers.utils.Interface([`event ${EVENT_NAME}(${eventTypes.join(',')})`]);
+    const eventSignature = eventInterface.getEventTopic(EVENT_NAME);
     console.log("eventSignature:" + JSON.stringify(eventSignature))
 
     const url =  aProvider.getBaseUrl()
@@ -84,7 +83,7 @@ const PublishedEvents = () => {
 
     const contract = await new ethers.Contract(CONTRACT_ADDRESS, AC_ABI, aProvider)
 
-    const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
+    const fetchedEvents = await contract.queryFilter(EVENT_NAME, 0, currentBlkNum);
     setEvents(fetchedEvents)
   }
 
@@ -120,12 +119,15 @@ const PublishedEvents = () => {
         <p>Event List Table</p>
         <p>From {providerName}</p>
         <table>
-        <th>Block Number</th> <th>Change Submission Account </th><th>   Change Instruction</th>
+        <th>Block Number</th> <th>Change Submission Account </th> <th> Account Owner  </th><th>   Change Instruction</th>
         {tableData.map( (entry) => (
           <tbody key={crypto.randomUUID()}>
           <tr key={crypto.randomUUID()}>
-            <td><Link to={`${ETHERSCAN_PREFIX}/block/${entry?.blockNumber}`} target="_blank" rel="noopener noreferrer">{entry?.blockNumber}</Link></td>
-            <td><Link to={`${ETHERSCAN_PREFIX}/address/${entry?.proposer}`} target="_blank" rel="noopener noreferrer">{lookupFunction(entry?.proposer)}</Link></td>
+            <td>
+              <EtherscanLink network={ETHER_NETWORK} assetType="block" address={entry?.blockNumber}/>
+            </td>
+            <td><EtherscanLink network={ETHER_NETWORK} assetType="address" address={entry?.proposer}/></td>
+            <td>{lookupFunction(entry?.proposer)}</td>
             <td>{entry?.data}</td>
           </tr>
           </tbody>))}

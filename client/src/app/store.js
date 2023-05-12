@@ -6,6 +6,7 @@ import productReducer from '../features/products/productSlice'
 import languageReducer from '../features/languages/languageSlice'
 import itemReducer from '../features/items/itemSlice'
 import eoaDictionaryReducer from '../features/blockchain/eoaDictionary/eoaDictionarySlice'
+import changeSubmissionReducer from '../features/blockchain/ethereum/ChangeAuthorizationSlice'
 
 export const store = configureStore({
   reducer: {
@@ -15,7 +16,8 @@ export const store = configureStore({
     languages: languageReducer,
     products: productReducer,
     items:itemReducer,
-    eoaDictionary:eoaDictionaryReducer
+    eoaDictionary:eoaDictionaryReducer,
+    changeSubmissionEvents:changeSubmissionReducer
   }
    
 })
