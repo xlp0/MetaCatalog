@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import {ethers} from 'ethers'
 import AC_ABI from '../features/blockchain/AccountableChange_abi.json'
 import { useSelector } from "react-redux";
+
 import { selectedItem } from '../features/items/itemSlice'
 import EtherscanLink from './EtherscanLink'
 
@@ -136,6 +137,8 @@ const WalletConnection = () => {
           console.log("The parsed object:" + JSON.stringify(jsonObj))
           if ('price' in jsonObj){
             let price = Number(jsonObj["price"])
+            theSelectedItem.priceChanged = true;
+            theSelectedItem.harga_pemerintah = jsonObj["price"];
             return <section>
                       <p> Updated Price: {price}</p> 
                       <p>Changed by: {part1}</p>
