@@ -3,13 +3,15 @@ import { imageList, theImage, priceString, convertToIPFS } from '../../hooks/for
 import WalletConnection from '../../components/WalletConnection'
 import { useSelector, useDispatch } from 'react-redux'
 import {selectAllProducts} from '../../features/products/productSlice'
-import  {selectItem} from '../../features/items/itemSlice'
+import  {selectItem, priceChanged, newPrice} from '../../features/items/itemSlice'
 
 
 const ProductDetails = () => {
 
    const productList = useSelector(selectAllProducts);
-   
+
+   const isPriceChanged = useSelector(priceChanged);
+   const hasNewPrice = useSelector(newPrice);
    const { id } = useParams();
 
    const product = productList.find(product => product?.no_produk === id);
@@ -30,10 +32,9 @@ const ProductDetails = () => {
             <div>
                 <h2>{product?.nama_produk}</h2>  
                 <p>Product No.:{product?.no_produk}</p>      
-                <p>Price: RP {priceString(product?.harga_pemerintah)}</p> 
-                {product?.priceChanged 
-                    ? <p style={{ fontSize: "15px", color: "red" }} >PRICE CHANGED</p> 
-                    : <p style={{ fontSize: "15px", color: "blue" }}>Original Price</p>}
+                <p>Price: RP {priceString(product?.harga_pemerintah)}{isPriceChanged 
+                    ? <p style={{ fontSize: "15px", color: "red" }} >PRICE CHANGED:{hasNewPrice}</p> 
+                    : <p style={{ fontSize: "15px", color: "blue" }}>Original Price</p>}</p>                 
                 <p>Total Stock: {product?.jumlah_stok}</p>    
             </div>
             

@@ -28,7 +28,6 @@ const PublishedEvents = () => {
     setProviderName("Infura:" + aProvider.connection.url);
 
     let currentBlkNum = await aProvider.getBlockNumber();
-    console.log("Current Block Number" + currentBlkNum);
 
     const contract = await new ethers.Contract(CONTRACT_ADDRESS, AC_ABI, aProvider)
 
@@ -65,21 +64,11 @@ const PublishedEvents = () => {
     const aProvider = new ethers.providers.EtherscanProvider(ETHER_NETWORK, process.env.REACT_APP_ETHERSCAN_KEY);
     setProvider(aProvider);
     setProviderName("Etherscan:" + aProvider.getBaseUrl());
-    const eventTypes = getEventTypes(EVENT_NAME);
 
-    const eventInterface = new ethers.utils.Interface([`event ${EVENT_NAME}(${eventTypes.join(',')})`]);
-    const eventSignature = eventInterface.getEventTopic(EVENT_NAME);
-    console.log("eventSignature:" + JSON.stringify(eventSignature))
 
     const url =  aProvider.getBaseUrl()
     console.log("Use Etherscan Provider URL:" + JSON.stringify(url));
     let currentBlkNum = await aProvider.getBlockNumber();
-    console.log("Current Block Number" + currentBlkNum);
-    const block = await provider.getBlock(currentBlkNum);
-    const timestamp = block.timestamp;
-    const date = new Date(timestamp * 1000);
-    console.log("Current Block's Timestamp:" + date.toLocaleString())
-
 
     const contract = await new ethers.Contract(CONTRACT_ADDRESS, AC_ABI, aProvider)
 
@@ -104,7 +93,6 @@ const PublishedEvents = () => {
       setTableData(rows.sort((b, a) => a?.blockNumber - b?.blockNumber));
     };
     fetchData()
-    console.log("Selected Provider: " + JSON.stringify(provider))
   }, [provider, providerName, events])
 
   return (

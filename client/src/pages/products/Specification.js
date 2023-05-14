@@ -14,6 +14,7 @@ const Specification = () => {
   
   const theSelectedItem = useSelector(selectedItem);
 
+
   return (
     <div>
       <h2>Specification</h2>

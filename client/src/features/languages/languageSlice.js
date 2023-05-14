@@ -42,7 +42,6 @@ export const languageSlice = createSlice({
         state.isLoading = false
         state.isSuccess = true
         state.languages = action.payload
-        // console.log("GET LANGUAGES" + JSON.stringify(state.languages))
       })
       .addCase(getLanguages.rejected, (state, action) => {
         state.isLoading = false

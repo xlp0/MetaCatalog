@@ -34,7 +34,6 @@ const changeSubmissionSlice = createSlice({
     reducers: {},
     extraReducers(builder) {
         builder.addCase(queryFilterWithEtherscan.fulfilled, (state, action) => {
-            console.log("extraReducer stage:" +  JSON.stringify(action.payload))
             state.etherScan = action.payload;
         })
     }

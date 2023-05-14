@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import {ethers} from 'ethers'
 import AC_ABI from '../features/blockchain/AccountableChange_abi.json'
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
-import { selectedItem } from '../features/items/itemSlice'
+import { selectedItem, changePrice, priceChanged, newPrice } from '../features/items/itemSlice'
 import EtherscanLink from './EtherscanLink'
 
 const WalletConnection = () => {
@@ -28,6 +28,7 @@ const WalletConnection = () => {
   const [value, setValue] = useState('');
 
   const theSelectedItem = useSelector(selectedItem);
+  const dispatch = useDispatch();
 
   const handleChange = (event) => {
     const regex = /^[1-9]\d*$/; // positive integer regex
@@ -42,6 +43,7 @@ const WalletConnection = () => {
   const listenToEvent = () => {
     console.log("Listen to Event called...");
     setIsLoading(true)
+    try {
     const listeningContract = new ethers.Contract(
                       contractAddress, 
                       AC_ABI, 
@@ -52,8 +54,11 @@ const WalletConnection = () => {
       }
       setIsLoading(false)
       fetchValueFromEthereum()
-      console.log("DATA FROM EVENT:" + JSON.stringify(res))
     })
+  } catch (err) {
+    console.log(err)
+
+  }
   }
 
 
@@ -82,10 +87,10 @@ const WalletConnection = () => {
             .then( result => {
             accountChangeHandler(result[0]);
             setConnectButtonText(WALLET_CONNECTED_TEXT);
-            updateCurrentValue();
+            listenToEvent()
             })
         }catch(err){
-            console.log(err);
+            console.log("connectWalletHandler failed first time:" + err);
         }
         
     }else{
@@ -94,17 +99,12 @@ const WalletConnection = () => {
     
  }
 
-  const updateCurrentValue = async () => {
-    listenToEvent();
-  }
-
   const fetchValueFromEthereum = async () => {
     setCurrentContractVal(WIP_INDICATOR_STRING);
     let currentBlkNum = await provider.getBlockNumber();
     const fetchedEvents = await contract.queryFilter(EVENT_NAME, 0, currentBlkNum);
     const latestEvent = fetchedEvents.pop();
     let val = latestEvent.args.sender + ":" + latestEvent.args.data;
-    console.log("fecthValueFromEthereum called:" + val)
     setCurrentContractVal(val);
     return val;
   }
@@ -130,15 +130,13 @@ const WalletConnection = () => {
       const firstColonIndex = aStr.indexOf(':');
       const part1 = aStr.substring(0, firstColonIndex);
       const part2 = aStr.substring(firstColonIndex + 1);
-      console.log("The first accountStr:   " + part1)
-      console.log("The content String:" + part2)
+      
         try {
           let jsonObj = JSON.parse(part2)
-          console.log("The parsed object:" + JSON.stringify(jsonObj))
+          
           if ('price' in jsonObj){
             let price = Number(jsonObj["price"])
-            theSelectedItem.priceChanged = true;
-            theSelectedItem.harga_pemerintah = jsonObj["price"];
+            dispatch(changePrice(price))
             return <section>
                       <p> Updated Price: {price}</p> 
                       <p>Changed by: {part1}</p>
@@ -188,7 +186,6 @@ const WalletConnection = () => {
       <button type="submit">Submit Change Request</button>
     </form>
     <p>--- Updated Contract Value ---</p>
-    {/* <button onClick={getCurrentVal} > Get Current Value </button> */}
     <h3>
       {isLoading ? (
         
