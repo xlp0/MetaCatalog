@@ -1,9 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const item = JSON.parse(localStorage.getItem('item'))
-
 const initialState = {
-  item: item ? item :null
+  item: null
 }
 
 
@@ -15,7 +13,6 @@ export const itemSlice = createSlice({
         console.log("itemSlice's selectItem has been fired :" + JSON.stringify(action.payload) )
         state.item = action.payload;
         console.log("itemSlice's state.item after assignment :" + JSON.stringify(state.item) )
-
     }
   }
 })

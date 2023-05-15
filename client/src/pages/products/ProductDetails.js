@@ -19,7 +19,7 @@ const ProductDetails = () => {
    dispatch(selectItem(product));
    const selectedProduct = store.someItem
    console.log("Right After CALLING DISPATCH..." + JSON.stringify(selectedProduct));
-   console.dir(store)
+   console.dir(store.itemReducer)
 
 
   return (
