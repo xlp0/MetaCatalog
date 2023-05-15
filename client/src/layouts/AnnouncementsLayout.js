@@ -5,6 +5,7 @@ const AnnouncementsLayout = () => {
     <div className="announcements-layout">
     <nav>
       <NavLink to="announcements">Announcements</NavLink>
+      <NavLink to="prefeched">Prefetched</NavLink>
       <NavLink to="published_events">Published Events</NavLink>
     </nav>
       <Outlet />

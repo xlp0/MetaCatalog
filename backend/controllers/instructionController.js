@@ -21,7 +21,7 @@ const executeInstruction = asyncHandler(async (req, res) => {
     throw new Error('Please supply some text value')
   }
 
-  console.log(JSON.stringify(req?.body))
+  // console.log(JSON.stringify(req?.body))
 
   res.status(200).json(req?.body)
 })

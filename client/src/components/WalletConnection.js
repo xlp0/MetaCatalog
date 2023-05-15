@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import {ethers} from 'ethers'
 import AC_ABI from '../features/blockchain/AccountableChange_abi.json'
-import {Link} from 'react-router-dom'
+import { useSelector, useDispatch } from "react-redux";
+
+import { selectedItem, changePrice } from '../features/items/itemSlice'
+import EtherscanLink from './EtherscanLink'
 
 const WalletConnection = () => {
 
+  const ETHER_NETWORK = process.env.REACT_APP_ETHEREUM_NETWORK;
   const [errorMessage, setErrorMessage] = useState(null);
   const [defaultAccount, setDefaultAccount] = useState("");
   // eslint-disable-next-line no-unused-vars
@@ -18,10 +22,13 @@ const WalletConnection = () => {
   const [currentContractVal, setCurrentContractVal] = useState(WIP_INDICATOR_STRING);
 
   const contractAddress = process.env.REACT_APP_ACCOUNTABLE_CHANGE_CONTRACT_ADDRESS;
-  const eventName = "ChangeSubmitted"
+  const EVENT_NAME = "ChangeSubmitted"
   const WALLET_CONNECTED_TEXT = "Wallet Connected"
 
   const [value, setValue] = useState('');
+
+  const theSelectedItem = useSelector(selectedItem);
+  const dispatch = useDispatch();
 
   const handleChange = (event) => {
     const regex = /^[1-9]\d*$/; // positive integer regex
@@ -36,18 +43,22 @@ const WalletConnection = () => {
   const listenToEvent = () => {
     console.log("Listen to Event called...");
     setIsLoading(true)
+    try {
     const listeningContract = new ethers.Contract(
                       contractAddress, 
                       AC_ABI, 
                       signer);
-                      listeningContract.on(eventName, (eventOutput) => {
-                        let res = {
-                          eventOutput
-                        }
-                        setIsLoading(false)
-                        fetchValueFromEthereum()
-                        console.log("DATA FROM EVENT:" + JSON.stringify(res))
-                      })
+    listeningContract.on(EVENT_NAME, (eventOutput) => {
+      let res = {
+        eventOutput
+      }
+      setIsLoading(false)
+      fetchValueFromEthereum()
+    })
+  } catch (err) {
+    console.log(err)
+
+  }
   }
 
 
@@ -76,10 +87,10 @@ const WalletConnection = () => {
             .then( result => {
             accountChangeHandler(result[0]);
             setConnectButtonText(WALLET_CONNECTED_TEXT);
-            updateCurrentValue();
+            listenToEvent()
             })
         }catch(err){
-            console.log(err);
+            console.log("connectWalletHandler failed first time:" + err);
         }
         
     }else{
@@ -88,24 +99,19 @@ const WalletConnection = () => {
     
  }
 
-  const updateCurrentValue = async () => {
-    listenToEvent();
-  }
-
   const fetchValueFromEthereum = async () => {
     setCurrentContractVal(WIP_INDICATOR_STRING);
     let currentBlkNum = await provider.getBlockNumber();
-    const fetchedEvents = await contract.queryFilter(eventName, 0, currentBlkNum);
+    const fetchedEvents = await contract.queryFilter(EVENT_NAME, 0, currentBlkNum);
     const latestEvent = fetchedEvents.pop();
     let val = latestEvent.args.sender + ":" + latestEvent.args.data;
-    console.log("fecthValueFromEthereum called:" + val)
     setCurrentContractVal(val);
     return val;
   }
 
   const submitValueToContract = (e) => {
     e.preventDefault();
-    const valueToBeSent = { no_produk: "4522100001-PEP-001442670", price: value}
+    const valueToBeSent = { no_produk:theSelectedItem?.no_produk, price: value}
     let strValue = JSON.stringify(valueToBeSent)
 
     contract.submitChange(strValue);  
@@ -115,8 +121,36 @@ const WalletConnection = () => {
   }
 
     useEffect(() => {
-        console.log("useEffect called:" + currentContractVal)
+        // console.log("useEffect called:" + currentContractVal)
     }, [currentContractVal, isLoading])
+
+    const contractValueComponent = () => {
+      let aStr =  currentContractVal
+      try {
+      const firstColonIndex = aStr.indexOf(':');
+      const part1 = aStr.substring(0, firstColonIndex);
+      const part2 = aStr.substring(firstColonIndex + 1);
+      
+        try {
+          let jsonObj = JSON.parse(part2)
+          
+          if ('price' in jsonObj){
+            let price = Number(jsonObj["price"])
+            dispatch(changePrice(price))
+            return <section>
+                      <p> Updated Price: {price}</p> 
+                      <p>Changed by: {part1}</p>
+                    </section>
+          }
+        } catch (err) {
+          console.log(err + ": accountStr")
+        }
+      
+    }catch (error) {
+      console.log(error)
+    }
+      return aStr;
+    }
 
   return (
     <div>
@@ -130,9 +164,7 @@ const WalletConnection = () => {
         {defaultAccount ?
           <h3>
             Ethereum Address: 
-            <Link to={`https://goerli.etherscan.io/address/${defaultAccount}`} target="_blank" rel="noopener noreferrer">
-            {defaultAccount}
-            </Link>
+            <EtherscanLink network={ETHER_NETWORK} assetType="address" address={defaultAccount}/>
           </h3>:
 
           <div> No connected account, yet </div>
@@ -145,9 +177,7 @@ const WalletConnection = () => {
       <p>---</p>
       <hr />
       Solidity Contract Address:{" "}
-      <Link to={`https://goerli.etherscan.io/address/${contractAddress}`} target="_blank" rel="noopener noreferrer">
-        {contractAddress}
-      </Link>
+      <EtherscanLink network={ETHER_NETWORK} assetType="address" address={contractAddress}/>
     </h3>
 
     <form onSubmit={submitValueToContract}>
@@ -156,12 +186,12 @@ const WalletConnection = () => {
       <button type="submit">Submit Change Request</button>
     </form>
     <p>--- Updated Contract Value ---</p>
-    {/* <button onClick={getCurrentVal} > Get Current Value </button> */}
     <h3>
       {isLoading ? (
+        
         <div>{WIP_INDICATOR_STRING}</div>
       ) : (
-        <div>{currentContractVal}</div>
+        <div style={{ fontSize: "15px", color: "red" }}>{contractValueComponent()}</div>
       )}
       {errorMessage}
     </h3>

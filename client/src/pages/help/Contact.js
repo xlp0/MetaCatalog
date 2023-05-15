@@ -28,7 +28,6 @@ const Contact = () => {
 export default Contact
 
 export const contactAction = async ( {request} ) => {
-  console.log(request);
   const data = await request.formData();
 
   const submission = {

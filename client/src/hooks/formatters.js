@@ -29,6 +29,16 @@ export const priceString = (aNumber) => {
     }else{
         return "Input value must be a number"
     }
-
 }
+
+export const  shortenedAccountString = ( theString )  => {
+    let str = String(theString)
+    if (str.length < 20){
+      return str
+    }else{
+      let firstPart = str.slice(0,10)
+      let lastPart = str.slice(-10)
+      return firstPart+ "..." + lastPart
+    }
+  }
 

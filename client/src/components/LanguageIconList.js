@@ -21,7 +21,6 @@ function LanguageIconList({ languages }) {
 
     const handleLanguageClick = (language) => {
       setSelectedLanguage(language);
-      console.log("selected language:" + language?.name);
     };
   
     const handleLanguageMouseEnter = (event) => {

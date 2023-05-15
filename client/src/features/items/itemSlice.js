@@ -1,7 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+
+
 const initialState = {
-  item: null
+  item: null,
+  priceChanged: false,
+  newPrice: 0
 }
 
 
@@ -10,13 +14,16 @@ export const itemSlice = createSlice({
   initialState,
   reducers: {
     selectItem : (state, action) => {
-        console.log("itemSlice's selectItem has been fired :" + JSON.stringify(action.payload) )
         state.item = action.payload;
-        console.log("itemSlice's state.item after assignment :" + JSON.stringify(state.item) )
+    },
+    changePrice : (state, action) => {
+      state.newPrice = action.payload;
     }
   }
 })
 
 export default itemSlice.reducer
-export const { selectItem } = itemSlice.actions;
-export const someItem = (state) => state.item;
+export const { selectItem, changePrice } = itemSlice.actions;
+export const selectedItem = (state) => state.items.item;
+export const priceChanged = (state) => state.items.priceChanged;
+export const newPrice = (state) => state.items.newPrice;

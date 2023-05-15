@@ -15,7 +15,6 @@ export const createEvent = createAsyncThunk(
   async (eventData, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      console.log("Sent to the eventSlice:" + JSON.stringify(eventData))
       return await eventService.createEvent(eventData, token)
     } catch (error) {
       const message =

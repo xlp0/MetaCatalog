@@ -18,7 +18,6 @@ const RootLayout = ( knownLanguages ) => {
 
   const search = (e) => {
     e.preventDefault();
-    console.log(e.target.searchStr.value)
     e.target.searchStr.value =""
     navigate("products")
   }
