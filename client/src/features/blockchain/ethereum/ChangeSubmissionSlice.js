@@ -23,7 +23,6 @@ export const queryFilterWithChosenProvider = createAsyncThunk('ChangeSubmission/
         let currentBlkNum = await etherScanProvider.getBlockNumber();
         const fetchedEvents = await contract.queryFilter(EVENT_NAME, 0, currentBlkNum);
         const anArray = transformEventsIntoDictionaryArray(AC_ABI, EVENT_NAME, fetchedEvents);
-        console.log("Try to PERFORM QUERY anArray:" + JSON.stringify(anArray));
 
         return anArray
     } catch {
@@ -35,7 +34,7 @@ export const startListeningToEventOnChosenProvider = createAsyncThunk('ChangeSub
     try {
         const listeningContract = new ethers.Contract( CONTRACT_ADDRESS, AC_ABI, etherScanProvider);
         listeningContract.on(EVENT_NAME, (sender, data, event) => { 
-            myStore.dispatch(addEvent({sender:sender, data:data, blockNumber: event.blockNumber}))
+            myStore.dispatch(addEvent({sender:sender, data:data, blockNumber: event?.blockNumber}))
         })
             return null
         } catch {
@@ -49,7 +48,6 @@ const changeSubmissionSlice = createSlice({
     initialState,
     reducers: {
         addEvent: (state, action) => {
-            console.log("addEvent triggered:" + JSON.stringify(action.payload));
             state.changeSubmissionEvents.push(action.payload)
           }
     },

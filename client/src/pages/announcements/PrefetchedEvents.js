@@ -7,7 +7,6 @@ const PrefetchedEvents = () => {
     const tableData = useSelector(selectChangeSubmissionEvents);
 
     useEffect(() => {
-      console.log("useEffect triggered because tableData changed"+ JSON.stringify(tableData[tableData.length-1]));
     }, [tableData]);
 
   return (
