@@ -27,7 +27,8 @@ export function getEventTypes(theABI, aName) {
             acc[key] = event.args[index];
             return acc;
           }, {});
-        return obj;
+        const  objWithBlockNumber = { ...obj, blockNumber:event.blockNumber}
+        return objWithBlockNumber;
     })
     return eventsAsDictionaries
   }

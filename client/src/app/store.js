@@ -18,6 +18,6 @@ export const store = configureStore({
     items:itemReducer,
     eoaDictionary:eoaDictionaryReducer,
     changeSubmissionEvents:changeSubmissionReducer
-  }
+  },
    
 })
