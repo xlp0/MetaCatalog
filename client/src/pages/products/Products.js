@@ -11,9 +11,9 @@ const Products = () => {
     const productList = useSelector(selectAllProducts);
     
     const products = productList?.filter( item => 
-      (item?.no_produk?.toLowerCase().includes(productNumber)) ||
-      (item?.nama_produk?.toLowerCase().includes(productNumber)) ||
-      (item?.nama_manufaktur?.toLowerCase().includes(productNumber)) 
+      (item?.no_produk?.toLowerCase().includes(productNumber.toLowerCase())) ||
+      (item?.nama_produk?.toLowerCase().includes(productNumber.toLowerCase())) ||
+      (item?.nama_manufaktur?.toLowerCase().includes(productNumber.toLowerCase())) 
     );
 
   return (
