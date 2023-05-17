@@ -3,15 +3,16 @@ import { imageList, theImage, priceString, convertToIPFS } from '../../hooks/for
 import WalletConnection from '../../components/WalletConnection'
 import { useSelector, useDispatch } from 'react-redux'
 import {selectAllProducts} from '../../features/products/productSlice'
-import  {selectItem, priceChanged, newPrice} from '../../features/items/itemSlice'
+import  {selectItem} from '../../features/items/itemSlice'
+import  {selectDictionaryOfEffectiveChanges} from '../../features/blockchain/ethereum/ChangeSubmissionSlice'
+import {useEffect, useState} from 'react'
 
 
 const ProductDetails = () => {
 
    const productList = useSelector(selectAllProducts);
 
-   const isPriceChanged = useSelector(priceChanged);
-   const hasNewPrice = useSelector(newPrice);
+
    const { id } = useParams();
 
    const product = productList.find(product => product?.no_produk === id);
@@ -20,6 +21,19 @@ const ProductDetails = () => {
    const dispatch = useDispatch();
    dispatch(selectItem(product));
 
+   const priceChangeDictinoary = useSelector(selectDictionaryOfEffectiveChanges);
+   const [isPriceChanged, setIsPriceChanged] = useState(false);
+   const [newPrice, setNewPrice] = useState(0);
+
+
+   useEffect(() => {
+
+   if (priceChangeDictinoary[product?.no_produk]){
+    setNewPrice(priceChangeDictinoary[product?.no_produk]);
+    setIsPriceChanged(true)
+}
+    console.log("UseEffect called in ProductDetails");
+   }, [isPriceChanged, newPrice,priceChangeDictinoary, product])
 
   return (
     <>
@@ -33,7 +47,7 @@ const ProductDetails = () => {
                 <h2>{product?.nama_produk}</h2>  
                 <p>Product No.:{product?.no_produk}</p>      
                 <p>Price: RP {priceString(product?.harga_pemerintah)}{isPriceChanged 
-                    ? <p style={{ fontSize: "15px", color: "red" }} >PRICE CHANGED:{hasNewPrice}</p> 
+                    ? <p style={{ fontSize: "15px", color: "red" }} >PRICE CHANGED:{newPrice}</p> 
                     : <p style={{ fontSize: "15px", color: "blue" }}>Original Price</p>}</p>                 
                 <p>Total Stock: {product?.jumlah_stok}</p>    
             </div>

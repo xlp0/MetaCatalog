@@ -3,7 +3,7 @@ import {ethers} from 'ethers'
 import AC_ABI from '../features/blockchain/AccountableChange_abi.json'
 import { useSelector, useDispatch } from "react-redux";
 
-import { selectedItem, changePrice } from '../features/items/itemSlice'
+import { selectedItem } from '../features/items/itemSlice'
 import EtherscanLink from './EtherscanLink'
 
 const WalletConnection = () => {
@@ -136,7 +136,6 @@ const WalletConnection = () => {
           
           if ('price' in jsonObj){
             let price = Number(jsonObj["price"])
-            dispatch(changePrice(price))
             return <section>
                       <p> Updated Price: {price}</p> 
                       <p>Changed by: {part1}</p>

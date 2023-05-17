@@ -7,10 +7,11 @@ import { Provider } from 'react-redux';
 import { getLanguages } from './features/languages/languageSlice'
 import { fetchOriginalProducts } from './features/products/productSlice'
 import { fetchInitialEOADictionary } from './features/blockchain/eoaDictionary/eoaDictionarySlice'
-import { queryFilterWithChosenProvider, startListeningToEventOnChosenProvider } from './features/blockchain/ethereum/ChangeSubmissionSlice'
+import { queryFilterWithChosenProvider, buildDictionaryOfEffectiveChanges, startListeningToEventOnChosenProvider } from './features/blockchain/ethereum/ChangeSubmissionSlice'
 
 
 store.dispatch(queryFilterWithChosenProvider())
+store.dispatch(buildDictionaryOfEffectiveChanges())
 store.dispatch(startListeningToEventOnChosenProvider(store))
 store.dispatch(fetchInitialEOADictionary())
 store.dispatch(getLanguages())

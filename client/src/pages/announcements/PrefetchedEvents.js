@@ -1,12 +1,16 @@
 import { useSelector } from "react-redux";
 import {selectChangeSubmissionEvents} from '../../features/blockchain/ethereum/ChangeSubmissionSlice'
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import EtherscanLink from "../../components/EtherscanLink";
 
 const PrefetchedEvents = () => {
     const tableData = useSelector(selectChangeSubmissionEvents);
+    const [eventList, setEventList] = useState([])
 
     useEffect(() => {
+      if (tableData != null) {
+         setEventList(tableData)  
+      }
     }, [tableData]);
 
   return (
@@ -20,7 +24,7 @@ const PrefetchedEvents = () => {
             <th> Change Instruction </th>
           </tr>
         </thead>
-        {tableData.map( (entry) => (
+        {eventList.map( (entry) => (
           <tbody key={crypto.randomUUID()}>
           <tr key={crypto.randomUUID()}>
             <td><EtherscanLink network={process.env.REACT_APP_ETHEREUM_NETWORK} assetType="block" address={entry?.blockNumber}/></td>
