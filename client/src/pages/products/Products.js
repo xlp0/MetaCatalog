@@ -10,7 +10,11 @@ const Products = () => {
 
     const productList = useSelector(selectAllProducts);
     
-    const products = productList?.filter( item => item?.no_produk?.toLowerCase().includes(productNumber));
+    const products = productList?.filter( item => 
+      (item?.no_produk?.toLowerCase().includes(productNumber)) ||
+      (item?.nama_produk?.toLowerCase().includes(productNumber)) ||
+      (item?.nama_manufaktur?.toLowerCase().includes(productNumber)) 
+    );
 
   return (
     <div className="products">

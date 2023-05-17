@@ -21,39 +21,24 @@ const initialState = {
 
 export const queryFilterWithChosenProvider = createAsyncThunk('ChangeSubmission/queryFilterWithChosenProvider', async () => {
     try {
-        const contract = new ethers.Contract(CONTRACT_ADDRESS, AC_ABI, etherScanProvider)
-        let currentBlkNum = await etherScanProvider.getBlockNumber();
-        const fetchedEvents = await contract.queryFilter(EVENT_NAME, 0, currentBlkNum);
-        const anArray = transformEventsIntoDictionaryArray(AC_ABI, EVENT_NAME, fetchedEvents);
-
-        return anArray
-    } catch {
-        return []
-    }
-    })
-
-export const buildDictionaryOfEffectiveChanges = createAsyncThunk('ChangeSubmission/buildDictionaryOfEffectiveChanges', async () => {
-    try {
         let dictionary = {}
+
         const contract = new ethers.Contract(CONTRACT_ADDRESS, AC_ABI, etherScanProvider)
         let currentBlkNum = await etherScanProvider.getBlockNumber();
         const fetchedEvents = await contract.queryFilter(EVENT_NAME, 0, currentBlkNum);
-        
+
         let eventArray = transformEventsIntoDictionaryArray(AC_ABI, EVENT_NAME, fetchedEvents);
+
         if (Array.isArray(eventArray)){
             eventArray?.forEach((event) => {
-                console.log("event content" + JSON.stringify(event));
                 let dataContent = event?.data;
                 if (dataContent){
-                    console.log("data content" + dataContent);
-                    dictionary = {...dictionary, ...sendDataContentToDictionaryOfEffectiveChanges(dataContent)};
+                    dictionary = {...dictionary, ...addToDictionaryOfEffectiveChanges(dataContent)};
                 }
-                console.log("dictionary content" + JSON.stringify(dictionary));
-
               })
         }
 
-        return dictionary
+        return {changeSubmissionEvents:eventArray, dictionaryOfEffectiveChanges:dictionary}
     } catch (err){
         console.log(err)
         return {}
@@ -75,7 +60,7 @@ export const startListeningToEventOnChosenProvider = createAsyncThunk('ChangeSub
     }) 
 
 
-const sendDataContentToDictionaryOfEffectiveChanges = ( dataContent ) => {
+const addToDictionaryOfEffectiveChanges = ( dataContent ) => {
     let myDictionary = {}
     if (dataContent) {
         try {
@@ -99,21 +84,20 @@ const changeSubmissionSlice = createSlice({
             state.changeSubmissionEvents.push(action.payload)
             state.lastBlockNumber = action.payload.blockNumber;
             state.latestEvent = action.payload
-            state.dictionaryOfEffectiveChanges = {...state.dictionaryOfEffectiveChanges , ...sendDataContentToDictionaryOfEffectiveChanges(action.payload?.data) }
+            state.dictionaryOfEffectiveChanges = {...state.dictionaryOfEffectiveChanges , ...addToDictionaryOfEffectiveChanges(action.payload?.data) }
           }
     },
     extraReducers(builder) {
         builder.addCase(queryFilterWithChosenProvider.fulfilled, (state, action) => {
-            state.changeSubmissionEvents = action.payload;
-            let lastEvent = action.payload[action.payload.length - 1];
+            state.changeSubmissionEvents = action.payload.changeSubmissionEvents;
+            state.dictionaryOfEffectiveChanges = action.payload["dictionaryOfEffectiveChanges"];
+
+            let lastEvent = action.payload.changeSubmissionEvents[action.payload.changeSubmissionEvents.length - 1];
             state.latestEvent = lastEvent
             state.lastBlockNumber = lastEvent.blockNumber;
         })
         .addCase(startListeningToEventOnChosenProvider.fulfilled, (state, action) => {
             state.isListening = true
-        })
-        .addCase(buildDictionaryOfEffectiveChanges.fulfilled, (state, action) => {
-            state.dictionaryOfEffectiveChanges = {...state.dictionaryOfEffectiveChanges , ...action.payload }
         })
     }
     })
