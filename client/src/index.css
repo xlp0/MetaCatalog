@@ -621,6 +621,38 @@ h3 {
   animation: spin 1.2s linear infinite;
 }
 
+.product_number{
+  font-size: large;
+  color: red;
+}
+
+.product_number:nth-child(odd) {
+  background-color: darkgray;
+}
+
+.product_number:nth-child(even) {
+  background-color: lightgray;
+}
+
+.product_info{
+  font-size: small;
+  display: flex;
+  justify-content: space-between;
+  color: black;
+}
+
+.product_price{
+  font-size: large;
+  display: flex;
+  justify-content: space-between;
+  color: black;
+}
+
+.product_price_changed{
+  font-size: large;
+  color: red;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);

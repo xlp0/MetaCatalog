@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import {ethers} from 'ethers'
 import AC_ABI from '../features/blockchain/AccountableChange_abi.json'
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { selectedItem } from '../features/items/itemSlice'
 import EtherscanLink from './EtherscanLink'
+
+import { priceString } from '../hooks/formatters'
+
 
 const WalletConnection = () => {
 
@@ -28,7 +31,6 @@ const WalletConnection = () => {
   const [value, setValue] = useState('');
 
   const theSelectedItem = useSelector(selectedItem);
-  const dispatch = useDispatch();
 
   const handleChange = (event) => {
     const regex = /^[1-9]\d*$/; // positive integer regex
@@ -137,7 +139,7 @@ const WalletConnection = () => {
           if ('price' in jsonObj){
             let price = Number(jsonObj["price"])
             return <section>
-                      <p> Updated Price: {price}</p> 
+                      <p> Updated Price: {priceString(price)}</p> 
                       <p>Changed by: {part1}</p>
                     </section>
           }

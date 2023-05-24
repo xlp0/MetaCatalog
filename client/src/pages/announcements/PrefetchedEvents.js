@@ -9,7 +9,8 @@ const PrefetchedEvents = () => {
 
     useEffect(() => {
       if (tableData != null) {
-         setEventList(tableData)  
+        let newData = [...tableData].reverse();
+         setEventList(newData)  
       }
     }, [tableData]);
 

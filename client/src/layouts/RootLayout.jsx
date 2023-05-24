@@ -36,14 +36,6 @@ const RootLayout = ( knownLanguages ) => {
                 <div><img className="img-responsive" src="/img/e_cat_logo.png" alt="eCatalog logo" ></img></div>
               </a>
               <div>
-                <form className="searchForm" onSubmit={search}>
-                  <div className="searchForm">
-                    
-                    <input className="borderedInput" id='searchStr' type='text' placeholder="Type content to be searched" />
-                    <button type='submit' className="searchButton"><FaSearch /></button>
-                    
-                  </div>
-                </form>
               </div>
               <div>
                   <a className="navbar-brand" href="/">

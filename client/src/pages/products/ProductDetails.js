@@ -47,7 +47,7 @@ const ProductDetails = () => {
                 <h2>{product?.nama_produk}</h2>  
                 <p>Product No.:{product?.no_produk}</p>      
                 <p>Price: RP {priceString(product?.harga_pemerintah)}{isPriceChanged 
-                    ? <p style={{ fontSize: "15px", color: "red" }} >PRICE CHANGED:{newPrice}</p> 
+                    ? <p style={{ fontSize: "15px", color: "red" }} >PRICE CHANGED:{priceString(newPrice)}</p> 
                     : <p style={{ fontSize: "15px", color: "blue" }}>Original Price</p>}</p>                 
                 <p>Total Stock: {product?.jumlah_stok}</p>    
             </div>
