@@ -29,6 +29,9 @@ const WalletConnection = () => {
   const WALLET_CONNECTED_TEXT = "Wallet Connected"
 
   const [value, setValue] = useState('');
+  const [valueSubmissionFailed, setValueSubmissionFailed] = useState(false);
+  const [submissionFailureText, setSubmissionFailureText] = useState("");
+
 
   const theSelectedItem = useSelector(selectedItem);
 
@@ -48,8 +51,8 @@ const WalletConnection = () => {
     try {
     const listeningContract = new ethers.Contract(
                       contractAddress, 
-                      AC_ABI, 
-                      signer);
+                      AC_ABI,
+                      provider);
     listeningContract.on(EVENT_NAME, (eventOutput) => {
       let res = {
         eventOutput
@@ -111,20 +114,32 @@ const WalletConnection = () => {
     return val;
   }
 
-  const submitValueToContract = (e) => {
+  const submitValueToContract = async (e) => {
     e.preventDefault();
-    const valueToBeSent = { no_produk:theSelectedItem?.no_produk, price: value}
-    let strValue = JSON.stringify(valueToBeSent)
+    try {
+      const valueToBeSent = { no_produk:theSelectedItem?.no_produk, price: value}
+      let strValue = JSON.stringify(valueToBeSent)
 
-    contract.submitChange(strValue);  
-    e.target.setText.value = '';
-    setIsLoading(true);
-    fetchValueFromEthereum();
+      await contract.submitChange(strValue);  
+      e.target.setText.value = '';
+      setIsLoading(true);
+      fetchValueFromEthereum();
+      setValueSubmissionFailed(false)
+      setSubmissionFailureText("")
+    } catch (err){
+      setValueSubmissionFailed(true)
+      setSubmissionFailureText("Failed to submit value, this account is not allowed to submit price change, please change the selected MetaMask Account...")
+      console.log("submitValueToContract Failed:" + err);
+    }
   }
 
     useEffect(() => {
         // console.log("useEffect called:" + currentContractVal)
     }, [currentContractVal, isLoading])
+
+    useEffect(() => {
+      console.log("useEffect called:" + submissionFailureText)
+  }, [submissionFailureText])
 
     const contractValueComponent = () => {
       let aStr =  currentContractVal
@@ -187,6 +202,9 @@ const WalletConnection = () => {
       <input className="borderedInput" id="setText" value={value} onChange={handleChange} type="text" placeholder="Type content to be send to the contract" />
       <button type="submit">Submit Change Request</button>
     </form>
+    
+    {valueSubmissionFailed? <p style={{ color: 'red' }}>{submissionFailureText}</p> : <p>{submissionFailureText}</p> }
+
     <p>--- Updated Contract Value ---</p>
     <h3>
       {isLoading ? (

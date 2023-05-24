@@ -70,7 +70,7 @@ const addToDictionaryOfEffectiveChanges = ( dataContent ) => {
             }
             return myDictionary;
         } catch (err){
-            console.log(err)
+            // console.log(err)
         }
     }
 }    
