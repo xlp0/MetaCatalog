@@ -156,7 +156,8 @@ const WalletConnection = () => {
   return (
     <div>
       <div className="LoginPanel">
-        <p>You will need to have MetaMask installed in your browser to use this panel</p>
+        {WALLET_CONNECTED_TEXT === connectButtonText ? "" : <p>You will need to have MetaMask installed in your browser to use this panel</p> }
+       
         <hr />        
 
         <button onClick={connectWalletHandler}>{connectButtonText}</button>
